@@ -1,0 +1,39 @@
+A:hover {
+	color:#C0C0C0; text-decoration:none
+}
+A:link {
+	color:#33CCCC; text-decoration:none
+}
+A {
+	color:#33CCCC; text-decoration:none
+}
+A.menue {
+	color:#FFFFFF; text-decoration:none
+}
+body {
+	background-color:#000000; scrollbar-face-color: #12285A; scrollbar-shadow-color: #000000; scrollbar-highlight-color: #12285A; scrollbar-3dlight-color: #000000; scrollbar-darkshadow-color: #000000; scrollbar-track-color: #000000; scrollbar-arrow-color: #000000;
+}
+h1,h2,h3,h4,body,br,ul,ol,li,tr,td,th,address,blockquote,nobr,b,em,i,span {
+	font-family:Tahoma, Verdana, Arial; font-size:12px; color:#CCCCCC; line-height: 13pt
+}
+td.menue,p.menue {
+	font-family:Tahoma, Verdana, Arial; font-size:14px; color:#FFFFFF; font-weight:bold;
+}
+td.cat,p.cat {
+	font-family:Tahoma, Verdana, Arial; font-size:12px; color:#CCCCCC; font-weight:bold;
+}
+td.space,p.space {
+	font-family:Tahoma, Verdana, Arial; font-size:12px; color:#CCCCCC; padding-left:8;
+}
+td.footer,p.footer {
+	font-family:Tahoma, Verdana, Arial; font-size:11px; color:#CCCCCC;
+}
+input,textarea,select {
+	background-color:#12285A; font-family:Tahoma, Verdana, Arial; font-size:12px; color:#CCCCCC; border-color:#000000; border-style:solid; border-width:1px; padding-left:2px; padding-right:2px;
+}
+cell {
+	background-color:#1f1f1f; color: #ffffff; font-size:9pt;
+}
+cell1 {
+	background-color:#184373; color: #ffffff; font-size:9pt;
+}
