@@ -244,7 +244,7 @@ if(isset($_REQUEST['newreg'])){
 		$mail->Port = 587;
 		$mail->SMTPAuth = true;
 		$mail->Username = "noreply@die-ewigen.com";
-		$mail->Password = "lrrrnSPL4kQko0VreVBY";
+		$mail->Password = $GLOBALS['env_mail_password'];
 		$mail->setFrom('noreply@die-ewigen.com', 'Die Ewigen');
 		$mail->addReplyTo('noreply@die-ewigen.com', 'Die Ewigen');
 		$mail->addAddress($email1, utf8_decode($vorname.' '.$nachname));

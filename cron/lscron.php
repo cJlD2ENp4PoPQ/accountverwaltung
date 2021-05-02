@@ -1,6 +1,7 @@
 <?php
 set_time_limit(240);
 include "../inc/serverdata.inc.php";
+include "../inc/env.inc.php";
 include "../functions.php";
 
 include "../inccon.php";
@@ -86,7 +87,7 @@ color: #FFFFFF;background-color: #000000;} a {color: #f8ae56; text-align: center
 		$mail->Port = 587;
 		$mail->SMTPAuth = true;
 		$mail->Username = "noreply@die-ewigen.com";
-		$mail->Password = "lrrrnSPL4kQko0VreVBY";
+		$mail->Password = $GLOBALS['env_mail_password'];
 		$mail->setFrom('noreply@die-ewigen.com', 'Die Ewigen');
 		$mail->addReplyTo('noreply@die-ewigen.com', 'Die Ewigen');
 		$mail->addAddress('supportverteiler@die-ewigen.com');

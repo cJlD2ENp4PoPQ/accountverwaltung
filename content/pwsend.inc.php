@@ -87,7 +87,7 @@ if ($_POST["nic"] OR $_POST["email"]){ //schauen ob was eingegeben worden ist
 		//Username to use for SMTP authentication
 		$mail->Username = "noreply@die-ewigen.com";
 		//Password to use for SMTP authentication
-		$mail->Password = "lrrrnSPL4kQko0VreVBY";
+		$mail->Password = $GLOBALS['env_mail_password'];
 		//Set who the message is to be sent from
 		$mail->setFrom('noreply@die-ewigen.com', 'Die Ewigen');
 		//Set an alternative reply-to address
