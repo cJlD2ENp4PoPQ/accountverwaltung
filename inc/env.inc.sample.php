@@ -27,6 +27,7 @@ $GLOBALS['env_db_loginsystem_database']='';
 
 //SMTP-Postfach
 $GLOBALS['env_mail_server']='';
+$GLOBALS['env_mail_noreply']='';
 $GLOBALS['env_mail_user']='';
 $GLOBALS['env_mail_password']='';
 

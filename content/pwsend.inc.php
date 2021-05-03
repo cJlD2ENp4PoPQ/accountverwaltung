@@ -79,19 +79,19 @@ if ($_POST["nic"] OR $_POST["email"]){ //schauen ob was eingegeben worden ist
 		//Ask for HTML-friendly debug output
 		$mail->Debugoutput = 'html';
 		//Set the hostname of the mail server
-		$mail->Host = "smtp.1und1.de";
+		$mail->Host = $GLOBALS['env_mail_server'];
 		//Set the SMTP port number - likely to be 25, 465 or 587
 		$mail->Port = 587;
 		//Whether to use SMTP authentication
 		$mail->SMTPAuth = true;
 		//Username to use for SMTP authentication
-		$mail->Username = "noreply@die-ewigen.com";
+		$mail->Username = $GLOBALS['env_mail_user'];
 		//Password to use for SMTP authentication
 		$mail->Password = $GLOBALS['env_mail_password'];
 		//Set who the message is to be sent from
-		$mail->setFrom('noreply@die-ewigen.com', 'Die Ewigen');
+		$mail->setFrom($GLOBALS['env_mail_noreply'], 'Die Ewigen');
 		//Set an alternative reply-to address
-		$mail->addReplyTo('noreply@die-ewigen.com', 'Die Ewigen');
+		$mail->addReplyTo($GLOBALS['env_mail_noreply'], 'Die Ewigen');
 		//Set who the message is to be sent to
 		$mail->addAddress($row["reg_mail"], $row['vorname'].' '.$row['nachname']);
 		//Set the subject line

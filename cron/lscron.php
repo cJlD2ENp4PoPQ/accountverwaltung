@@ -83,13 +83,13 @@ color: #FFFFFF;background-color: #000000;} a {color: #f8ae56; text-align: center
 		]);		
 		$mail->SMTPDebug = 0;
 		$mail->Debugoutput = 'html';
-		$mail->Host = "smtp.1und1.de";
+		$mail->Host = $GLOBALS['env_mail_server'];
 		$mail->Port = 587;
 		$mail->SMTPAuth = true;
-		$mail->Username = "noreply@die-ewigen.com";
+		$mail->Username = $GLOBALS['env_mail_user'];
 		$mail->Password = $GLOBALS['env_mail_password'];
-		$mail->setFrom('noreply@die-ewigen.com', 'Die Ewigen');
-		$mail->addReplyTo('noreply@die-ewigen.com', 'Die Ewigen');
+		$mail->setFrom($GLOBALS['env_mail_noreply'], 'Die Ewigen');
+		$mail->addReplyTo($GLOBALS['env_mail_noreply'], 'Die Ewigen');
 		$mail->addAddress('supportverteiler@die-ewigen.com');
 
 		$mail->IsHTML(true); 
