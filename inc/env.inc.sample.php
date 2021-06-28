@@ -4,6 +4,8 @@
 //Admin-E-Mail-Adresse
 $GLOBALS['env_admin_email']='';
 
+//internes Supportsystem aktivieren?
+$GLOBALS['env_enable_support_page']=1;
 
 //Facebook-Login
 $GLOBALS['env_login_fb_id']='';

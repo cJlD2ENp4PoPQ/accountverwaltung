@@ -304,28 +304,22 @@ if(isset($_SESSION["ums_user_id"]) && $_SESSION["ums_user_id"]>0){
 	{
 		include "content/tickets.inc.php";
 	}*/
-	elseif($_REQUEST["command"]=="linkaccount")
-	{
+	elseif($_REQUEST["command"]=="linkaccount"){
 		include "content/linkaccount.inc.php";
 	}
-	elseif($_REQUEST["command"]=="community")
-	{
+	elseif($_REQUEST["command"]=="community"){
 		include "content/community.inc.php";
 	}
-	elseif($_REQUEST["command"]=="communitytl")
-	{
+	elseif($_REQUEST["command"]=="communitytl"){
 		include "content/communitytl.inc.php";
 	}
-	elseif($_REQUEST["command"]=="forum")
-	{
+	elseif($_REQUEST["command"]=="forum"){
 		include "content/forum.inc.php";
 	}
-	elseif($_REQUEST["command"]=="support")
-	{
+	elseif($_REQUEST["command"]=="support" && isset($GLOBALS['env_enable_support_page']) && $GLOBALS['env_enable_support_page']==1){
 		include "content/support.inc.php";
 	}
-	elseif($_REQUEST["command"]=="de_kb")
-	{
+	elseif($_REQUEST["command"]=="de_kb"){
 		include "content/de_kb.inc.php";
 	}  
 }else{	//man ist nicht eingeloggt

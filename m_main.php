@@ -67,7 +67,7 @@ if(isset($_SESSION['ums_user_id']) && $_SESSION["ums_user_id"]>0){
 	echo '<a '.$cssclass.'href="index.php?command=forum">'.$m_main_lang['forum'].'</a>';
   
 	//support
-	if($ums_language==1){
+	if($ums_language==1 && isset($GLOBALS['env_enable_support_page']) && $GLOBALS['env_enable_support_page']==1){
 
 		if($_REQUEST["command"]=="support"){
 			$um='<div style="width: 100%">';
