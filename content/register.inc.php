@@ -287,13 +287,23 @@ $google_loginUrl='https://accounts.google.com/o/oauth2/auth?response_type=code&a
 /////////////////////////////////////////////////////////////////
 // Registrierung per Dienst
 /////////////////////////////////////////////////////////////////
-echo '
-<div class="box-left">
-	<a class="button-auth-facebook" href="'.$fb_loginUrl.'"><div class="icon-login-facebook"></div>Registrieren mit facebook</a>
-	<div class="mt15"></div>
-	<a class="button-auth-google" href="'.$google_loginUrl.'"><div class="icon-login-google"></div>Registrieren mit Google</a>
-</div>';
-
+if(!empty($GLOBALS['env_login_fb_id']) || !empty($GLOBALS['env_login_google_id'])){
+	echo '
+	<div id="register-page">
+		<div class="box-left">';
+	
+	if(!empty($GLOBALS['env_login_fb_id'])){
+		echo '<a class="button-auth-facebook" href="'.$fb_loginUrl.'"><div class="icon-login-facebook"></div>Registrieren mit facebook</a>';
+	}
+	if(!empty($GLOBALS['env_login_fb_id']) && !empty($GLOBALS['env_login_google_id'])){
+		echo '<div class="mt15"></div>';
+	}
+	if(!empty($GLOBALS['env_login_google_id'])){
+		echo '<a class="button-auth-google" href="'.$google_loginUrl.'"><div class="icon-login-google"></div>Registrieren mit Google</a>';
+	}
+	
+	echo '</div>';
+}
 
 /////////////////////////////////////////////////////////////////
 // Registrierung per Dienst
