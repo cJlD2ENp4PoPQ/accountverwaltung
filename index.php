@@ -313,13 +313,13 @@ if(isset($_SESSION["ums_user_id"]) && $_SESSION["ums_user_id"]>0){
 	elseif($_REQUEST["command"]=="communitytl"){
 		include "content/communitytl.inc.php";
 	}
-	elseif($_REQUEST["command"]=="forum"){
+	elseif($_REQUEST["command"]=="forum" && isset($GLOBALS['env_enable_forum_connect']) && $GLOBALS['env_enable_forum_connect']==1){
 		include "content/forum.inc.php";
 	}
 	elseif($_REQUEST["command"]=="support" && isset($GLOBALS['env_enable_support_page']) && $GLOBALS['env_enable_support_page']==1){
 		include "content/support.inc.php";
 	}
-	elseif($_REQUEST["command"]=="de_kb"){
+	elseif($_REQUEST["command"]=="de_kb" && isset($GLOBALS['env_enable_de_kb_db']) && $GLOBALS['env_enable_de_kb_db']==1){
 		include "content/de_kb.inc.php";
 	}  
 }else{	//man ist nicht eingeloggt

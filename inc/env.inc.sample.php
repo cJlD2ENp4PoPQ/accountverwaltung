@@ -7,6 +7,20 @@ $GLOBALS['env_admin_email']='';
 //internes Supportsystem aktivieren?
 $GLOBALS['env_enable_support_page']=1;
 
+//internes Supportsystem aktivieren?
+$GLOBALS['env_enable_support_page']=1;
+
+//DE-KB-DB aktivieren?
+$GLOBALS['env_enable_de_kb_db']=1;
+
+//Forenmenüpunkt aktivieren?
+$GLOBALS['env_enable_forum_connect']=0;
+
+//URL-Liste
+$GLOBALS['env_url_portal']='';
+$GLOBALS['env_url_impressum']='';
+$GLOBALS['env_url_datenschutz']='';
+
 //Facebook-Login
 $GLOBALS['env_login_fb_id']='';
 $GLOBALS['env_login_fb_secret']='';

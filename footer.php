@@ -5,10 +5,10 @@ echo '<br style="clear:both;">';
 
 echo '
 <div id="footer">
-				&copy; <a href="http://www.die-ewigen.com" target="_new">'.$footer_lang['dieewigen'].'</a>
+				&copy; <a href="'.$GLOBALS['env_url_portal'].'" target="_blank">'.$footer_lang['dieewigen'].'</a>
 
-        - <a href="http://bgam.es/impressum.php" target="_blank">'.$footer_lang['impressum'].'</a>
-        - <a href="http://bgam.es/datenschutz.php" target="_blank">Datenschutz</a>
+        - <a href="'.$GLOBALS['env_url_impressum'].'" target="_blank">'.$footer_lang['impressum'].'</a>
+        - <a href="'.$GLOBALS['env_url_datenschutz'].'" target="_blank">Datenschutz</a>
 </div>';
 
 //content-div

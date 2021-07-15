@@ -64,14 +64,14 @@ if(isset($_SESSION['ums_user_id']) && $_SESSION["ums_user_id"]>0){
 	
 	//forum
 	//if($_REQUEST["command"]=="forum"){$cssclass=' class="button1 textbold"';}else{$cssclass=' class="button1"';}
-	echo '<a '.$cssclass.'href="index.php?command=forum">'.$m_main_lang['forum'].'</a>';
+	if(isset($GLOBALS['env_enable_forum_connect']) && $GLOBALS['env_enable_forum_connect']==1){
+		echo '<a '.$cssclass.'href="index.php?command=forum">'.$m_main_lang['forum'].'</a>';
+	}
   
-	//support
-	if($ums_language==1 && isset($GLOBALS['env_enable_support_page']) && $GLOBALS['env_enable_support_page']==1){
-
+	//Support
+	if(isset($GLOBALS['env_enable_support_page']) && $GLOBALS['env_enable_support_page']==1){
 		if($_REQUEST["command"]=="support"){
 			$um='<div style="width: 100%">';
-			
 
 			if($_REQUEST["page"]=="1"){$cssclass=' class="button1 textbold"';}else{$cssclass=' class="button1"';}
 			$um.='<a '.$cssclass.'href="index.php?command=support&page=1">'.$m_main_lang['ticketold'].'</a>';
@@ -87,9 +87,12 @@ if(isset($_SESSION['ums_user_id']) && $_SESSION["ums_user_id"]>0){
 		}
 
 		echo '<a href="index.php?command=support&page=1">'.$m_main_lang['support'].'</a>';
-		
+	}
+	
+	if(isset($GLOBALS['env_enable_de_kb_db']) && $GLOBALS['env_enable_de_kb_db']==1){
 		echo '<a href="index.php?command=de_kb">DE-KB</a>';
 	}
+
   
 	//logout
 	echo '<a href="index.php?command=logout">'.$m_main_lang['logout'].'</a>';
