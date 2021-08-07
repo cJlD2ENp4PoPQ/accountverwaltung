@@ -27,9 +27,7 @@ Deutschland
 
 E-Mail: issomad@die-ewigen.com
 Telefon: 03212 - 1046989 (kein Support)
-Ust-ID: DE243662528
 Gerichtsstand: Amtsgericht Homburg
-Online-Streitbeilegung gemäß Art. 14 Abs. 1 ODR-VO: Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit, die Sie unter http://ec.europa.eu/consumers/odr/ finden.
 
 ';
 $pwsend_lang['msg_2']='Die E-Mail wurde versendet.';

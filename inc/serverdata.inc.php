@@ -205,14 +205,15 @@ if($sv_debugmode==1){
 	$serverdata[$sindex][2]='3';//wt
 	$serverdata[$sindex][3]='12';//kt
 	$serverdata[$sindex][4]='Beschreibung';//beschreibung
-	$serverdata[$sindex][5]='127.0.0.1';//host
-	$serverdata[$sindex][6]='/de/de2/';//url
+	$serverdata[$sindex][5]='de.test';//host
+	$serverdata[$sindex][6]='/';//url
 	$serverdata[$sindex][7]=0;//paytype, 0=kostenlos, aber kein credittransfer, 1=kostenlos mit credittransfer, 2=bezahlserver ohne credittransfer
 	$serverdata[$sindex][8]=1;//gametyp: 1=de, 2=se
 	$serverdata[$sindex][9]=1;//sprache: 1=de, 2=en
 	$serverdata[$sindex][10]=array(0,1); //cooperation bei der der server aktiv ist
 	$serverdata[$sindex][11]=array(9999999, 0); //bedingungen f�r den server: 1. feld mindestplatz in der globalen rangliste, 2. feld: betatester
 	$serverdata[$sindex][12]=0; //f�r neue spieler 0=nein, 1=ja
+	$serverdata[$sindex]['database']='de_ang';
 }
 /*
 $sindex++;

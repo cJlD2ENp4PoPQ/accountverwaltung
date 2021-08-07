@@ -35,7 +35,7 @@ if($_SESSION["ums_language"]==''){
 //serverdaten einbinden
 include "inc/serverdata.inc.php";
 include "functions.php";
-include 'content/de/lang/'.$_SESSION[ums_language].'_serverlogin.lang.php';
+include 'content/de/lang/'.$_SESSION['ums_language'].'_serverlogin.lang.php';
 
 //ip adresse feststellen
 $ip=getenv("REMOTE_ADDR");
@@ -44,11 +44,11 @@ $ip=$parts[0].'.x.'.$parts[2].'.'.$parts[3];
 
 
 //schauen ob es der deb-link ist
-$eb=intval($_REQUEST["eb"]);
+$eb=isset($_REQUEST["eb"]) ? intval($_REQUEST["eb"]) : '';
 
 //schauen ob es der bg launcher ist
-$fastlogin=intval($_REQUEST["fastlogin"]);
-$servertag=$_REQUEST["servertag"];
+$fastlogin=isset($_REQUEST["fastlogin"]) ? intval($_REQUEST["fastlogin"]) : 0;
+$servertag=$_REQUEST["servertag"] ?? '';
 
 //zuerst über rpc einen loginschlüssel generieren und auf diesen dann per url weiterleiten
 

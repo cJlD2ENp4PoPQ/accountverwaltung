@@ -186,6 +186,13 @@ if(isset($_REQUEST['newreg'])){
 		if($monat==$newreg_lang['monat']) $monat=0;
 		if($jahr==$newreg_lang['jahr']) $jahr=0;
 		*/
+		$tag=0;
+		$monat=0;
+		$jahr=0;
+		$geschlecht=0;
+		
+		//Passwort verschlüsseln
+		$newpass_crypt=password_hash($newpass, PASSWORD_DEFAULT);
 
 		//daten in der db ablegen
 		$sql="INSERT INTO ls_user
@@ -195,15 +202,17 @@ if(isset($_REQUEST['newreg'])){
 		vorname, nachname, plz,
 		ort, strasse, land,
 		telefon, tag, monat,
-		jahr, geschlecht, werberid, newsletter_accept)
+		jahr, geschlecht, werberid, newsletter_accept,
+		kommentar, fb_id, fb_access_token, google_id, google_access_token)
 		VALUES
-		('$email1', '$email1', MD5('$newpass'),
+		('$email1', '$email1', '$newpass_crypt',
 		NOW(), NOW(), 1,
 		'$ip', 0, '$spielername',
 		'$vorname', '$nachname', '$plz',
 		'$ort', '$strasse', '$land',
 		'$telefon', '$tag', '$monat',
-		'$jahr', '$geschlecht', '$werberid', '$newsletter_accept')";
+		'$jahr', '$geschlecht', '$werberid', '$newsletter_accept',
+		'','','','','')";
 		mysql_query($sql, $db);
 
 		$user_id=mysql_insert_id();

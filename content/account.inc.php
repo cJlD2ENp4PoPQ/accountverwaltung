@@ -52,15 +52,22 @@ if(isset($_POST['oldpass']) || isset($_POST['newpass']) || isset($_POST['pass1']
 	$pass2=SecureValue($_POST['pass2']);
 		
 	//echo '<br>'.HTTP_REFERER.'<br>';
-	$db_daten=mysql_query("SELECT user_id FROM ls_user WHERE user_id = '$ums_user_id' AND pass=MD5('$oldpass')");
-	$num = mysql_num_rows($db_daten);
-	if ($num==1){ //oldpass ist korrekt
+	$db_daten=mysql_query("SELECT * FROM ls_user WHERE user_id = '$ums_user_id'", $db);
+	$row = mysql_fetch_array($db_daten);
+
+	$passwordOK=false;
+	if(password_verify(trim($oldpass), $row['pass'])){
+		$passwordOK=true;
+	}
+
+	if ($passwordOK){ //oldpass ist korrekt
 		$pass1=trim($pass1);
 		$pass2=trim($pass2);
 		if ($pass1==$pass2){
 			$minpwchars=6;
 			if (strlen($pass1)>$minpwchars-1){
-				mysql_query("UPDATE ls_user set pass = MD5('$pass1'), newpass='' WHERE user_id = '$ums_user_id'",$db);
+				$pass1_crypt=password_hash($pass1, PASSWORD_DEFAULT);
+				mysql_query("UPDATE ls_user set pass = '$pass1_crypt', newpass='' WHERE user_id = '$ums_user_id'",$db);
 				$errmsg.='<font color="00FF00">'.$account_lang['msg_7'].'</font>';
 			}else{
 				$errmsg.='<font color="FF0000">'.$account_lang['msg_4'].': '.$minpwchars.').</font>';
@@ -76,7 +83,7 @@ if(isset($_POST['oldpass']) || isset($_POST['newpass']) || isset($_POST['pass1']
 //newssprache ändern
 if(isset($_REQUEST["changenewslang"])){
 	//schauen wie der wert aktuell ist
-	$db_daten=mysql_query("SELECT newslang FROM ls_user WHERE user_id='$ums_user_id'");
+	$db_daten=mysql_query("SELECT newslang FROM ls_user WHERE user_id='$ums_user_id'",$db);
 	$row = mysql_fetch_array($db_daten);
 	$newslang=$row["newslang"];
 	if($newslang==0){

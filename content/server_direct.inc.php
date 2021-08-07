@@ -160,69 +160,76 @@ for ($i=0;$i<=$sindex;$i++){
 				
 
 					$db_daten=mysqli_query($db_temp, "SELECT de_login.user_id, de_login.supporter, de_login.last_login, de_login.delmode, de_login.status AS astatus, de_user_data.spielername, de_user_data.tick, de_user_data.score, de_login.status AS lstatus, de_login.last_login, de_user_data.sector, de_user_data.system, de_user_data.allytag, de_user_data.status, de_user_data.credits, de_user_data.patime, de_user_data.efta_user_id, de_user_data.sou_user_id FROM de_login left join de_user_data on(de_login.user_id = de_user_data.user_id) WHERE de_login.owner_id='".$_SESSION['ums_user_id']."'");
-					$num = mysqli_num_rows($db_daten);
-					if($num==1){
-						$row = mysqli_fetch_array($db_daten);
-						$user_id=$row["user_id"];
-						$accstatus=$row["astatus"];
-						$delmode=$row["delmode"];
-						$efta_user_id=$row['efta_user_id'];
-						$sou_user_id=$row['sou_user_id'];
-						$last_login=$row['last_login'];
-						$last_login=strtotime($last_login);
-						$last_login=date("d.m.Y - H:i", $last_login);
 
-						//$spielerinfos ='Server-Spieler-ID: ';
+					if($db_temp->errno==0){
 
-						$spielerinfos.='<b>Accountdaten</b>';
+						$num = mysqli_num_rows($db_daten);
+						if($num==1){
+							$row = mysqli_fetch_array($db_daten);
+							$user_id=$row["user_id"];
+							$accstatus=$row["astatus"];
+							$delmode=$row["delmode"];
+							$efta_user_id=$row['efta_user_id'];
+							$sou_user_id=$row['sou_user_id'];
+							$last_login=$row['last_login'];
+							$last_login=strtotime($last_login);
+							$last_login=date("d.m.Y - H:i", $last_login);
 
-						//Spielername
-						$spielerinfos.='<br>Spielername: '.$row['spielername'];
+							//$spielerinfos ='Server-Spieler-ID: ';
 
-						//Punkte
-						$spielerinfos.='<br>Punkte: '.number_format($row["score"], 0,"",".");
+							$spielerinfos.='<b>Accountdaten</b>';
 
-						//Accountalter in WT
-						$spielerinfos.='<br>Accountalter (WT): '.number_format($row["tick"], 0,"",".");
+							//Spielername
+							$spielerinfos.='<br>Spielername: '.$row['spielername'];
 
-						//Allianz
-						if($row["status"]==1 AND $row["allytag"]!=''){
-							$allytag=$row["allytag"];
-						}
-							else $allytag='-';
-						$spielerinfos.='<br>Allianz: '.$allytag;
+							//Punkte
+							$spielerinfos.='<br>Punkte: '.number_format($row["score"], 0,"",".");
 
-						//Credits
-						$spielerinfos.='<br>Credits: '.number_format($row["credits"], 0,"",".");
+							//Accountalter in WT
+							$spielerinfos.='<br>Accountalter (WT): '.number_format($row["tick"], 0,"",".");
 
-						//Letzte Aktion
-						if($accstatus!=3){
-							$spielerinfos.='<br>Letzte Aktion: '.$last_login;
-							$spielerstatus='aktiv';
+							//Allianz
+							if($row["status"]==1 AND $row["allytag"]!=''){
+								$allytag=$row["allytag"];
+							}
+								else $allytag='-';
+							$spielerinfos.='<br>Allianz: '.$allytag;
+
+							//Credits
+							$spielerinfos.='<br>Credits: '.number_format($row["credits"], 0,"",".");
+
+							//Letzte Aktion
+							if($accstatus!=3){
+								$spielerinfos.='<br>Letzte Aktion: '.$last_login;
+								$spielerstatus='aktiv';
+							}else{
+								$spielerstatus='Sondermodus';
+							}
+
+							//Accountstatus
+							if($accstatus==3 AND $delmode==0){
+								$spielerinfos.='<br>Der Account befindet sich bis zum folgenden Zeitpunkt im Urlaubsmodus und wird danach vom Wirtschaftstick wieder aktiviert: '.$last_login;
+							}
+							if($accstatus==3 AND $delmode==1){
+								$spielerinfos.='<br>Der Account befindet sich bis zum folgenden Zeitpunkt im Loeschmodus und wird danach vom Wirtschaftstick entfernt, wobei ein Loginversuch den Loeschmodus in einen Urlaubsmodus umwandelt: '.$last_login;
+							}
+							if($accstatus==2){
+								$spielerinfos.='<br>Der Account wurde gesperrt, erstelle ein Ticket falls Du fragen haben solltest.';
+							}
+
+							//Login-Link
+							if($showeblink==1){
+								$login_link='<a href="serverlogin.php?server='.$i.'&eb=1"><b>Spielen</b></a>';
+							}else{
+								$login_link='<a href="serverlogin.php?server='.$i.'" target="_blank"><b>Spielen</b></a>';
+							}
+
 						}else{
-							$spielerstatus='Sondermodus';
-						}
-
-						//Accountstatus
-						if($accstatus==3 AND $delmode==0){
-							$spielerinfos.='<br>Der Account befindet sich bis zum folgenden Zeitpunkt im Urlaubsmodus und wird danach vom Wirtschaftstick wieder aktiviert: '.$last_login;
-						}
-						if($accstatus==3 AND $delmode==1){
-							$spielerinfos.='<br>Der Account befindet sich bis zum folgenden Zeitpunkt im Loeschmodus und wird danach vom Wirtschaftstick entfernt, wobei ein Loginversuch den Loeschmodus in einen Urlaubsmodus umwandelt: '.$last_login;
-						}
-						if($accstatus==2){
-							$spielerinfos.='<br>Der Account wurde gesperrt, erstelle ein Ticket falls Du fragen haben solltest.';
-						}
-
-						//Login-Link
-						if($showeblink==1){
-							$login_link='<a href="serverlogin.php?server='.$i.'&eb=1"><b>Spielen</b></a>';
-						}else{
-							$login_link='<a href="serverlogin.php?server='.$i.'" target="_blank"><b>Spielen</b></a>';
+							$spielerinfos='Es wurde noch kein Account angelegt.';
 						}
 
 					}else{
-						$spielerinfos='Es wurde noch kein Account angelegt.';
+						echo '<br><br><br>DB-Access-Error';
 					}
 
 				}
@@ -243,53 +250,59 @@ for ($i=0;$i<=$sindex;$i++){
 					mysqli_select_db ($db_temp, $serverdata[$i]['database']);
 
 					$db_daten=mysqli_query($db_temp, "SELECT de_login.user_id, de_login.supporter, de_login.last_login, de_login.delmode, de_login.status AS astatus, de_user_data.spielername, de_user_data.tick, de_user_data.score, de_login.status AS lstatus, de_login.last_login, de_user_data.sector, de_user_data.system, de_user_data.allytag, de_user_data.status, de_user_data.credits, de_user_data.patime, de_user_data.efta_user_id, de_user_data.sou_user_id FROM de_login left join de_user_data on(de_login.user_id = de_user_data.user_id) WHERE de_login.owner_id='".$_SESSION['ums_user_id']."'");
-					$num = mysqli_num_rows($db_daten);
-					if($num==1){
-						$row = mysqli_fetch_array($db_daten);
-						$user_id=$row["user_id"];
-						$accstatus=$row["astatus"];
-						$delmode=$row["delmode"];
-						$efta_user_id=$row['efta_user_id'];
-						$sou_user_id=$row['sou_user_id'];
-						$last_login=$row['last_login'];
-						$last_login=strtotime($last_login);
-						$last_login=date("d.m.Y - H:i", $last_login);
 
-						//$spielerinfos ='Server-Spieler-ID: ';
+					if($db_temp->errno==0){
 
-						$spielerinfos.='<b>Accountdaten</b>';
+						$num = mysqli_num_rows($db_daten);
+						if($num==1){
+							$row = mysqli_fetch_array($db_daten);
+							$user_id=$row["user_id"];
+							$accstatus=$row["astatus"];
+							$delmode=$row["delmode"];
+							$efta_user_id=$row['efta_user_id'];
+							$sou_user_id=$row['sou_user_id'];
+							$last_login=$row['last_login'];
+							$last_login=strtotime($last_login);
+							$last_login=date("d.m.Y - H:i", $last_login);
 
-						//Credits
-						$spielerinfos.='<br>Credits: '.number_format($row["credits"], 0,"",".");
+							//$spielerinfos ='Server-Spieler-ID: ';
 
-						//Letzte Aktion
-						if($accstatus!=3){
-							$spielerinfos.='<br>Letzte Aktion: '.$last_login;
-							$spielerstatus='aktiv';
+							$spielerinfos.='<b>Accountdaten</b>';
+
+							//Credits
+							$spielerinfos.='<br>Credits: '.number_format($row["credits"], 0,"",".");
+
+							//Letzte Aktion
+							if($accstatus!=3){
+								$spielerinfos.='<br>Letzte Aktion: '.$last_login;
+								$spielerstatus='aktiv';
+							}else{
+								$spielerstatus='Sondermodus';
+							}
+
+							//Accountstatus
+							if($accstatus==3 AND $delmode==0){
+								$spielerinfos.='<br>Der Account befindet sich bis zum folgenden Zeitpunkt im Urlaubsmodus und wird danach vom Wirtschaftstick wieder aktiviert: '.$last_login;
+							}
+							if($accstatus==3 AND $delmode==1){
+								$spielerinfos.='<br>Der Account befindet sich bis zum folgenden Zeitpunkt im Loeschmodus und wird danach vom Wirtschaftstick entfernt, wobei ein Loginversuch den Loeschmodus in einen Urlaubsmodus umwandelt: '.$last_login;
+							}
+							if($accstatus==2){
+								$spielerinfos.='<br>Der Account wurde gesperrt, erstelle ein Ticket falls Du fragen haben solltest.';
+							}
+
+							//Login-Link
+							if($showeblink==1){
+								$login_link='<a href="serverlogin.php?server='.$i.'&eb=1"><b>Spielen</b></a>';
+							}else{
+								$login_link='<a href="serverlogin.php?server='.$i.'" target="_blank"><b>Spielen</b></a>';
+							}					
+
 						}else{
-							$spielerstatus='Sondermodus';
+							$spielerinfos='Es wurde noch kein Account angelegt.';
 						}
-
-						//Accountstatus
-						if($accstatus==3 AND $delmode==0){
-							$spielerinfos.='<br>Der Account befindet sich bis zum folgenden Zeitpunkt im Urlaubsmodus und wird danach vom Wirtschaftstick wieder aktiviert: '.$last_login;
-						}
-						if($accstatus==3 AND $delmode==1){
-							$spielerinfos.='<br>Der Account befindet sich bis zum folgenden Zeitpunkt im Loeschmodus und wird danach vom Wirtschaftstick entfernt, wobei ein Loginversuch den Loeschmodus in einen Urlaubsmodus umwandelt: '.$last_login;
-						}
-						if($accstatus==2){
-							$spielerinfos.='<br>Der Account wurde gesperrt, erstelle ein Ticket falls Du fragen haben solltest.';
-						}
-
-						//Login-Link
-						if($showeblink==1){
-							$login_link='<a href="serverlogin.php?server='.$i.'&eb=1"><b>Spielen</b></a>';
-						}else{
-							$login_link='<a href="serverlogin.php?server='.$i.'" target="_blank"><b>Spielen</b></a>';
-						}					
-
 					}else{
-						$spielerinfos='Es wurde noch kein Account angelegt.';
+						echo '<br><br><br>DB-Access-Error';
 					}
 				}
 

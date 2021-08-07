@@ -1,7 +1,8 @@
 <?php
 include 'content/de/lang/'.$ums_language.'_pwsend.lang.php';
 
-if ($_POST["nic"] OR $_POST["email"]){ //schauen ob was eingegeben worden ist
+$emailhassend=0;
+if( (isset($_POST["nic"]) && $_POST["nic"]) || (isset($_POST["email"]) && $_POST["email"]) ){ //schauen ob was eingegeben worden ist
 	$email=$_POST["email"];
 	$nic=$_POST["nic"];
 
@@ -31,9 +32,12 @@ if ($_POST["nic"] OR $_POST["email"]){ //schauen ob was eingegeben worden ist
 		$pwstring='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 		$newpass=$pwstring[rand(0, strlen($pwstring)-1)];
 		for($i=1; $i<=6; $i++) $newpass.=$pwstring[rand(0, strlen($pwstring)-1)];
+		
+		$newpass_crypt=password_hash($newpass, PASSWORD_DEFAULT);		
+
 		//passwort in db eintragen
 		$uid=$row["user_id"];
-		$sql="UPDATE ls_user set newpass=MD5('$newpass') WHERE user_id='$uid'";
+		$sql="UPDATE ls_user set newpass='$newpass_crypt' WHERE user_id='$uid'";
 		mysql_query($sql, $db);
 		//passwort versenden
 		$text=utf8_decode($pwsend_lang['msg_1']);

@@ -30,29 +30,51 @@ if( (isset($_REQUEST["loginname"]) && $_REQUEST["loginname"]!='') || (isset($_RE
     	//$_REQUEST["launcherkey"] = mysql_escape_string($_REQUEST["launcherkey"]);
     }
 	
-	//wenn fastlogin gesetzt ist, zugangsdaten entschlüsseln
+	//wenn fastlogin über den Launcherkey verwendet wird, dann darüber einloggen
+	$passwordOK=false;
+	$use_newpass=false;
 	if(isset($_REQUEST['launcherkey'])){
 		$sql = "SELECT * FROM ls_user WHERE launcherkey='".$_REQUEST['launcherkey']."';";
+		$result = mysql_query($sql) OR die(mysql_error());
+		$num = mysql_num_rows($result);
+
+		if($num==1){
+			$row = mysql_fetch_array($result);
+			$passwordOK=true;
+		}
 	}else{
+		//Login per Daten aus den Eingabefeldern
+		$sql = "SELECT * FROM ls_user WHERE	loginname = '".$_REQUEST['loginname']."' OR reg_mail = '".$_REQUEST['loginname']."';";
+		$result = mysql_query($sql) OR die(mysql_error());
+		$num = mysql_num_rows($result);
+
+		//wenn ein Datensatz gefunden worden ist, dann das Passwort überprüfen
+		if($num==1){
+			$row = mysql_fetch_array($result);
+
+			//Passwort überprüfen
+			if(password_verify(trim($_REQUEST['pass']), $row['pass']) || password_verify(trim($_REQUEST['pass']), $row['newpass'])){
+				$passwordOK=true;
+
+				$time=time()+32000000;
+				setcookie("cuser", $_REQUEST["loginname"] , $time);
+				setcookie("cpass", md5($row['pass']) , $time);
+			}
+
+			if(password_verify(trim($_REQUEST['pass']), $row['newpass'])){
+				$use_newpass=true;
+			}
 
 
-		$sql = "SELECT * FROM ls_user WHERE
-		(loginname = '".$_REQUEST['loginname']."' OR reg_mail = '".$_REQUEST['loginname']."') AND (pass = MD5('".$_REQUEST['pass']."') OR newpass = MD5('".$_REQUEST['pass']."') OR 
-		pass = '".$_COOKIE['cpass']."' OR pass='".$_REQUEST['pass']."');";
+		}
 	}
-	
-	//DEBUG
-	//echo $sql;
-
-	$result = mysql_query($sql) OR die(mysql_error());
-	$num = mysql_num_rows($result);
 
 	//wenn ein datensatz gefunden wurde, dann einloggen
-	if($num==1){
+	if($passwordOK){
 		
-		$row = mysql_fetch_array($result);
 		$ums_status=$row["acc_status"];
 		if($ums_status==1){ //alles richtig eingegen, spieler einloggen
+			//Spielerdaten auswerten
 			session_regenerate_id(true);
 			$_SESSION['ums_user_id']=$row["user_id"];
 			$_SESSION['ums_spielername']=$row["spielername"];
@@ -69,10 +91,6 @@ if( (isset($_REQUEST["loginname"]) && $_REQUEST["loginname"]!='') || (isset($_RE
 			
 			//if($_REQUEST["mobi"]=='off')@mail('issomad@die-ewigen.com', 'Mobillogin: '.$_SESSION[ums_user_id], '', 'FROM: issomad@die-ewigen.com');
 
-			//testen ob er das alternativ-pw verwendet hat
-			$sql = "SELECT user_id FROM ls_user WHERE user_id='$_SESSION[ums_user_id]' AND newpass = MD5('".$_REQUEST['pass']."');";
-			$result = mysql_query($sql) OR die(mysql_error());
-			$num = mysql_num_rows($result);
 			//logins hochzählen und ip-adresse speichern
 			$ip=getenv("REMOTE_ADDR");
 			$parts=explode(".",$ip);
@@ -80,8 +98,8 @@ if( (isset($_REQUEST["loginname"]) && $_REQUEST["loginname"]!='') || (isset($_RE
 
 			mysql_query("UPDATE ls_user SET logins=logins+1, last_login=NOW(), last_ip='$ip' WHERE user_id='$_SESSION[ums_user_id]'");
 
-			if($num==1)//er hat das alternative pw benutzt
-			{
+			//hat er das alternative pw benutzt?
+			if($use_newpass){
 				mysql_query("UPDATE ls_user SET pass=newpass WHERE user_id='$_SESSION[ums_user_id]'");
 				mysql_query("UPDATE ls_user set newpass='' WHERE user_id='$_SESSION[ums_user_id]'");
 			}

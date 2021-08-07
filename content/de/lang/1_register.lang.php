@@ -149,5 +149,5 @@ $newreg_lang['agb6']='Andalur AGB (Spielregeln)';
 $newreg_lang['registrieren']='Registrieren';
 $newreg_lang['hinweis']='Mehrfachanmeldungen sind nicht erlaubt, pro Person ist nur ein Account zul&auml;ssig.';
 $newreg_lang['werberid']='Werber-ID';
-$newreg_lang['newsletter_accept']='Ich stimme zu, dass mir BGAM.ES/Die Ewigen E-Mails mit projektbezogenen Informationen zusendet.';
+$newreg_lang['newsletter_accept']='Ich stimme zu, dass mir der Betreiber E-Mails mit projektbezogenen Informationen zusendet.';
 ?>

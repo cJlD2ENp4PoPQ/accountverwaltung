@@ -11,97 +11,55 @@ if(!empty($_REQUEST['a'])){
 // Login per Cookie
 //////////////////////////////////////////////////////////////
 if((!isset($_SESSION['ums_user_id']) || $_SESSION['ums_user_id']<1) && isset($_COOKIE['cpass']) && isset($_COOKIE["cuser"])){
-	$sql = "SELECT * FROM ls_user WHERE (loginname = '".$_COOKIE["cuser"]."' OR reg_mail = '".$_COOKIE["cuser"]."') AND pass = '".$_COOKIE['cpass']."';";
-   
-   	//DEBUG
-   	//echo $sql;
- 
-   	$result = mysql_query($sql) OR die(mysql_error());
-   	$num = mysql_num_rows($result);
+	$sql = "SELECT * FROM ls_user WHERE	loginname = '".$_COOKIE["cuser"]."' OR reg_mail = '".$_COOKIE["cuser"]."';";
+	$result = mysql_query($sql) OR die(mysql_error());
+	$num = mysql_num_rows($result);
+
+	$passwordOK=false;
+	//wenn ein Datensatz gefunden worden ist, dann das Passwort überprüfen
+	if($num==1){
+		$row = mysql_fetch_array($result);
+		
+		//Passwort überprüfen
+		if($_COOKIE['cpass']==MD5($row['pass'])){
+			$passwordOK=true;
+		}
+	}
  
    	//wenn ein datensatz gefunden wurde, dann einloggen
-   	if($num==1){
-		$row = mysql_fetch_array($result);
-		$ums_status=$row["acc_status"];
-		if($ums_status==1){ //alles richtig eingegen, spieler einloggen
+   	if($passwordOK){
+		$ums_status=$row['acc_status'];
+		if($ums_status==1){ //alles richtig, spieler einloggen
 			session_regenerate_id(true);
 			$_SESSION['ums_user_id']=$row["user_id"];
 			$ums_user_id=$_SESSION['ums_user_id'];
 			$_SESSION['ums_spielername']=$row["spielername"];
 			$_SESSION['ums_logins']=$row["logins"];
-			$_SESSION['ums_cooperation']=$row["cooperation"];
-			//$_SESSION["ums_bp_userid"]=$row["bp_userid"];
-			//$_SESSION['ums_bp_affiliateID']=$row[bp_affiliateID];
 		
-		//schauen ob die grafikpacks deaktiviert werden sollen
-		if($_COOKIE["cnogp"]=='off')$_SESSION['ums_nogp']=1;else $_SESSION['ums_nogp']=0;
-	
-		//schauen ob man die mobilversion gewählt hat
-		if($_COOKIE["cmobi"]=='off' || $_REQUEST["mobi"]=='off'){
-			$_SESSION['ums_mobi']=1;
-		}else{
-			$_SESSION['ums_mobi']=0;
-		}
+			//schauen ob die grafikpacks deaktiviert werden sollen
+			if(isset($_COOKIE["cnogp"]) && $_COOKIE["cnogp"]=='off'){
+				$_SESSION['ums_nogp']=1;
+			}else{
+				$_SESSION['ums_nogp']=0;
+			}
 		
-		//ip-adresse speichern
-		$ip=getenv("REMOTE_ADDR");
-		$parts=explode(".",$ip);
-		$ip=$parts[0].'.x.'.$parts[2].'.'.$parts[3];
+			//schauen ob man die mobilversion gewählt hat
+			if((isset($_COOKIE["cmobi"]) && $_COOKIE["cmobi"]=='off') || (isset($_REQUEST["mobi"]) && $_REQUEST["mobi"]=='off')){
+				$_SESSION['ums_mobi']=1;
+			}else{
+				$_SESSION['ums_mobi']=0;
+			}
+			
+			//ip-adresse speichern
+			$ip=getenv("REMOTE_ADDR");
+			$parts=explode(".",$ip);
+			$ip=$parts[0].'.x.'.$parts[2].'.'.$parts[3];
 
-		mysql_query("UPDATE ls_user SET last_login=NOW(), last_ip='$ip' WHERE user_id='$_SESSION[ums_user_id]'");
+			mysql_query("UPDATE ls_user SET last_login=NOW(), last_ip='$ip' WHERE user_id='$_SESSION[ums_user_id]'");
 
 		}
    }
 }	
-
-//======================== BPUSER ============================================================================================================================
-/*
-function de_keyValid($userid, $tempkey, $bp_cooperation){
-	$valid = false;
-	$timestamp = time();
-	$timestamp = $timestamp - 600;
-	$result = mysql_query("SELECT * FROM ls_user WHERE user_id='$userid' AND cooperation='$bp_cooperation' AND acc_status='1' AND loginkey = '$tempkey' AND loginkeytime > $timestamp");
-	if ($result)
-	{
-		$numrows = mysql_num_rows($result);
-		if ($numrows == 1)
-		{
-			$valid = true;
-    		//spielername in die session packen
-    		$row = mysql_fetch_array($result);
-    		$_SESSION['ums_spielername']=$row["spielername"];
-    		$_SESSION['ums_user_id']=$row["user_id"];
-    		$_SESSION['ums_bp_affiliateID']=$row[bp_affiliateID];
-    		//sprache festlegen
-    		if($row[bp_userlang]=='de')
-    		$_SESSION['ums_language']=1;
-    		else $_SESSION['ums_language']=2;
-		}
-	}
-	return($valid);
-}
-$params = $_REQUEST["params"];
-$params_array = explode("-", $params);
-$bp_userid = $params_array[0];
-$bp_tempkey = $params_array[1];
-$bp_cooperation = $params_array[2];
-
-if (count($params_array) == 3 && de_keyValid($bp_userid, $bp_tempkey, $bp_cooperation))
-{
-	$bpuser = true;
-	$_SESSION["ums_bp_userid"] = $bp_userid;
-	$_SESSION['ums_cooperation'] = "$bp_cooperation";
-	$ums_cooperation=$bp_cooperation;
-	
-	//logins hochzählen und ip merken
-	$ip=getenv("REMOTE_ADDR");
-	$parts=explode(".",$ip);
-	$ip=$parts[0].'.x.'.$parts[2].'.'.$parts[3];
-
-    mysql_query("UPDATE ls_user SET logins=logins+1, last_login=NOW(), last_ip='$ip' WHERE user_id='$_SESSION[ums_user_id]'");
-}
-*/
-//=============================================================================================================================================================
 
 //die sprache des users feststellen
 /*
@@ -136,28 +94,6 @@ $ums_language=$_SESSION["ums_language"];
 include "inc/serverdata.inc.php";
 include "functions.php";
 include "content/de/lang/1_index.lang.php";
-
-//Zugangsdaten im Cookie speichern
-$time=time()+32000000;
-if(isset($_REQUEST["loginname"]) && $_REQUEST["loginname"]!=''){
-	setcookie("cuser", $_REQUEST["loginname"] , $time);
-}
-//passwort nur neu setzen, wenn es sich geändert hat
-if(isset($_REQUEST["pass"]) && $_REQUEST["pass"]!=''){
-	setcookie("cpass", md5($_REQUEST["pass"]) , $time);
-}
-
-//cookie löschen, falls häkchen nicht mehr gesetzt ist
-/*
-if(!isset($_REQUEST["savezg"]) AND (isset($_POST["loginname"]) OR isset($_POST["pass"])))
-{
-  //wenn es gel�scht wird, dann trotzdem noch nen letzten login erm�glichen
-  $_POST["pass"]=$_COOKIE["pass"];
-  $time=0;
-  setcookie("cuser", "" , $time);
-  setcookie("cpass", "" , $time);
-}
-*/
 
 //cookie für grafikpack
 if(isset($_REQUEST["nogp"])){

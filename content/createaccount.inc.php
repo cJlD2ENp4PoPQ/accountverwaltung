@@ -4,7 +4,7 @@ include 'content/de/lang/'.$ums_language.'_createaccount.lang.php';
 $target=intval($_REQUEST["server"]);
 $gametyp=$serverdata[$target][8];
 
-//�berpr�fen ob man die voraussetzungen f�r den server hat
+//überprüfen ob man die voraussetzungen für den server hat
 $hasall=1;
 //platz in der globalen rangliste
 $db_daten=mysql_query("SELECT COUNT(*)AS wert FROM ls_user WHERE tlscore > (SELECT tlscore FROM ls_user WHERE user_id='$ums_user_id')",$db);
@@ -21,7 +21,7 @@ if($serverdata[$target][11][1]==1)
   if($row[betatester]==0)$hasall=-2;
 }
 
-//fehlermeldung ausgeben, wenn nicht alle vorbedinungen erf�llt sind, sonst ok-meldung ausgeben
+//fehlermeldung ausgeben, wenn nicht alle vorbedinungen erfüllt sind, sonst ok-meldung ausgeben
 if($hasall==1){
 	//echo '<font color="#00FF00">'.$createaccount_lang['vorbedingungerfuellt'].'</font><br><br>';
 }else {
@@ -32,15 +32,16 @@ if($hasall==1){
 	}
 }
 
-////////////////////////////////////////////////////////
+
 ////////////////////////////////////////////////////////
 //account anlegen
 ////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////
-if ($_POST[button] AND $hasall==1)
-{
+$errmsg='';
+$spielername='';
+$createok=0;
+if(isset($_POST['button']) AND $hasall==1){
   //$target=intval($_REQUEST["server"]);
-  $spielername=$_REQUEST["spielername"];
+  $spielername=$_REQUEST["spielername"] ?? '';
   $rasse=$_REQUEST["rasse"];
 
   
@@ -65,101 +66,96 @@ if ($_POST[button] AND $hasall==1)
   }
 
   //wenn die rasse ok ist, �berpr�fen ob er einen spielernamen eingegeben hat und ob der die erlaubten zeichen enth�lt
-  if($errmsg=='')
-  {
-  	//da es bei alu keine spielernamenvergabe �ber den hauptaccount gibt, dort als spielername die account-id vom hauptaccount vorbelegen
-  	if($gametyp==3)$spielername=$ums_user_id;
-  	if($gametyp==4)$spielername=$ums_user_id;
-  	
-    if($spielername!='')
-    {
-      //spielernamen auf g�ltige zeichen �berpr�fen
-      if(!preg_match("/^[[:alpha:]0-9äöü_=-]*$/i", $spielername)) $errmsg.='<font color="FF0000">'.$createaccount_lang['msg_2'].': _-=).</font>';
-      else
-      {
-        //fehlende daten f�r das erstellen des accounts auslesen
-        $sql = "SELECT * FROM ls_user WHERE user_id='$ums_user_id';";
-        $result = mysql_query($sql) OR die(mysql_error());
-        $row = mysql_fetch_array($result);
+	if($errmsg==''){
+		//da es bei alu keine spielernamenvergabe �ber den hauptaccount gibt, dort als spielername die account-id vom hauptaccount vorbelegen
+		if($gametyp==3)$spielername=$ums_user_id;
+		if($gametyp==4)$spielername=$ums_user_id;
+		
+		if($spielername!=''){
+			//spielernamen auf g�ltige zeichen �berpr�fen
+			if(!preg_match("/^[[:alpha:]0-9äöü_=-]*$/i", $spielername)){
+				$errmsg.='<font color="FF0000">'.$createaccount_lang['msg_2'].': _-=).</font>';
+			}else{
+				//fehlende daten f�r das erstellen des accounts auslesen
+				$sql = "SELECT * FROM ls_user WHERE user_id='$ums_user_id';";
+				$result = mysql_query($sql) OR die(mysql_error());
+				$row = mysql_fetch_array($result);
 
-      	$email=$row["reg_mail"];
-      	$vorname=$row["vorname"];
-      	$nachname=$row["nachname"];
-      	$strasse=$row["strasse"];
-      	$plz=$row["plz"];
-      	$ort=$row["ort"];
-      	$land=$row["land"];
-      	$telefon=$row["telefon"];
-      	$tag=$row["tag"];
-      	$monat=$row["monat"];
-      	$jahr=$row["jahr"];
-      	$geschlecht=$row["geschlecht"];
-      	$patime=$row["patime"];
-      	$cooperation=$row["cooperation"];
-      	$werberid=$row[werberid];
-      	
-      	//wenn es keine fehler gibt versuchen den account anzulegen
-		//echo 'B:'.$serverdata[$target][6];
-		//echo 'C:'.$serverdata[$target][5];
-      	$result=doPost($serverdata[$target][6].'rpc.php', 'authcode='.$GLOBALS['env_rpc_authcode'].'&createaccount=1&id='.$ums_user_id.
-       '&spielername='.urlencode($spielername).
-       '&rasse='.urlencode($gewrasse).
-       '&email='.urlencode($email).
-       '&vorname='.urlencode($vorname).
-       '&nachname='.urlencode($nachname).
-       '&strasse='.urlencode($strasse).
-       '&plz='.urlencode($plz).
-       '&ort='.urlencode($ort).
-       '&land='.urlencode($land).
-       '&telefon='.urlencode($telefon).
-       '&tag='.urlencode($tag).
-       '&monat='.urlencode($monat).
-       '&jahr='.urlencode($jahr).
-       '&geschlecht='.urlencode($geschlecht).
-       '&patime='.urlencode($patime).
-       '&cooperation='.urlencode($cooperation).
-       '&werberid='.urlencode($werberid)
-       , $serverdata[$target][5]);
-      	//ergebnis auswerten
-		//echo 'A:'.$result;
-      	switch($result)
-      	{
-        case '1':
-          //account ohne fehler angelegt
-          $errmsg.='<font color="00FF00">'.$createaccount_lang['msg_3'].'</font>';
-          $createok=1;
-          break;
-        case '2':
-          //spielername ist bereits vergeben
-          $errmsg.='<font color="FF0000">'.$createaccount_lang['msg_4'].'</font>';
-          break;
-        case '3':
-          //test auf emailadresse
-          $errmsg.='<font color="FF0000">'.$createaccount_lang['msg_5_1'].' '.$email.' '.$createaccount_lang['msg_5_2'].'</font>';
-          break;
-        case '4':
-          //test auf owner_id
-          $errmsg.='<font color="FF0000">'.$createaccount_lang['msg_6'].'</font>';
-          break;
-        default:
-          $errmsg.='<font color="FF0000">'.$createaccount_lang['msg_7'].'</font>';
-        }//ende switch $result
-      }
-    }
-    else $errmsg.='<font color="FF0000">'.$createaccount_lang['msg_8'].'</font>';
-  }
+				$email=$row["reg_mail"];
+				$vorname=$row["vorname"];
+				$nachname=$row["nachname"];
+				$strasse=$row["strasse"];
+				$plz=$row["plz"];
+				$ort=$row["ort"];
+				$land=$row["land"];
+				$telefon=$row["telefon"];
+				$tag=$row["tag"];
+				$monat=$row["monat"];
+				$jahr=$row["jahr"];
+				$geschlecht=$row["geschlecht"];
+				$patime=$row["patime"];
+				$werberid=$row['werberid'];
+				
+				//wenn es keine fehler gibt versuchen den account anzulegen
+				//echo 'B:'.$serverdata[$target][6];
+				//echo 'C:'.$serverdata[$target][5];
+				$result=doPost($serverdata[$target][6].'rpc.php', 'authcode='.$GLOBALS['env_rpc_authcode'].'&createaccount=1&id='.$ums_user_id.
+					'&spielername='.urlencode($spielername).
+					'&rasse='.urlencode($gewrasse).
+					'&email='.urlencode($email).
+					'&vorname='.urlencode($vorname).
+					'&nachname='.urlencode($nachname).
+					'&strasse='.urlencode($strasse).
+					'&plz='.urlencode($plz).
+					'&ort='.urlencode($ort).
+					'&land='.urlencode($land).
+					'&telefon='.urlencode($telefon).
+					'&tag='.urlencode($tag).
+					'&monat='.urlencode($monat).
+					'&jahr='.urlencode($jahr).
+					'&geschlecht='.urlencode($geschlecht).
+					'&patime='.urlencode($patime).
+					'&werberid='.urlencode($werberid)
+					, $serverdata[$target][5]);
+				//ergebnis auswerten
+				//echo 'A:'.$result;
+				switch($result){
+					case '1':
+						//account ohne fehler angelegt
+						$errmsg.='<font color="00FF00">'.$createaccount_lang['msg_3'].'</font>';
+						$createok=1;
+					break;
+					case '2':
+						//spielername ist bereits vergeben
+						$errmsg.='<font color="FF0000">'.$createaccount_lang['msg_4'].'</font>';
+					break;
+					case '3':
+						//test auf emailadresse
+						$errmsg.='<font color="FF0000">'.$createaccount_lang['msg_5_1'].' '.$email.' '.$createaccount_lang['msg_5_2'].'</font>';
+					break;
+					case '4':
+						//test auf owner_id
+						$errmsg.='<font color="FF0000">'.$createaccount_lang['msg_6'].'</font>';
+					break;
+					default:
+						$errmsg.='<font color="FF0000">'.$createaccount_lang['msg_7'].'</font>';
+				}//ende switch $result
+			}
+		}else{
+			$errmsg.='<font color="FF0000">'.$createaccount_lang['msg_8'].'</font>';
+		}
+	}
 }
 
 
 if($errmsg!='')echo $errmsg;
 
 //wenn es keinen spielernamen gibt den standardnamen auslesen
-if($spielername=='')
-{
-  $sql = "SELECT spielername FROM ls_user WHERE user_id='$ums_user_id';";
-  $result = mysql_query($sql) OR die(mysql_error());
-  $row = mysql_fetch_array($result);
-  $spielername=$row["spielername"];
+if($spielername==''){
+	$sql = "SELECT spielername FROM ls_user WHERE user_id='$ums_user_id';";
+	$result = mysql_query($sql) OR die(mysql_error());
+	$row = mysql_fetch_array($result);
+	$spielername=$row["spielername"];
 }
 
 //daten abfragen
