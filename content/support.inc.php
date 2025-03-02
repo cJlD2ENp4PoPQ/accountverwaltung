@@ -19,7 +19,7 @@ if ($_REQUEST['page']==1){
     		{
     			echo '<tr>';
     		
-    			echo '<td><a href="index.php?command=support&page=1&showtid='.$row['id'].'">'.utf8_encode($row['thema']).'</a></td>';
+    			echo '<td><a href="index.php?command=support&page=1&showtid='.$row['id'].'">'.utf8_encode_fix($row['thema']).'</a></td>';
     			echo '<td>'.date("G:i d.m.Y", $row['created']).'</td>';
     			echo '<td>'.date("G:i d.m.Y", $row['modified']).'</td>';
     			if($row['status']==0)$status='offen';else $status='beantwortet';
@@ -41,11 +41,11 @@ if ($_REQUEST['page']==1){
     	if($num>0)
     	{
     		$row = mysql_fetch_array($db_daten);
-    		//�berpr�fen ob das ticket dem spieler geh�rt
+    		//überprüfen ob das ticket dem spieler gehört
     		if($ums_user_id==$row['user_id'])
     		{
-    			//�berpr�fen ob eine antwort eingef�gt werden soll
-				if($_REQUEST['reply']==1){
+    			//überprüfen ob eine antwort eingefügt werden soll
+				if(isset($_REQUEST['reply']) && $_REQUEST['reply']==1){
 					$messagesql=trim($_REQUEST['nachricht']);
 					$messagesql=htmlspecialchars($messagesql, ENT_COMPAT | ENT_HTML401, 'ISO-8859-1');
 					$messagesql=str_replace('\r\n', '<br>', $messagesql);
@@ -67,10 +67,10 @@ if ($_REQUEST['page']==1){
 	    		while($row = mysql_fetch_array($db_daten)){
 	    			//header
 	    			if($row['poster']==$ums_spielername)$bgcolor='#444444';else $bgcolor='#446644';
-	    			echo '<div style="width: 100%; margin-top: 2px; padding: 5px; background-color: '.$bgcolor.';">'.utf8_encode($row['poster']).' - '.date("G:i d.m.Y", $row['created']).'</div>';
+	    			echo '<div style="width: 100%; margin-top: 2px; padding: 5px; background-color: '.$bgcolor.';">'.utf8_encode_fix($row['poster']).' - '.date("G:i d.m.Y", $row['created']).'</div>';
 	    			//body
 	    			if($row['poster']==$ums_spielername)$bgcolor='#222222';else $bgcolor='#226622';
-	    			echo '<div style="width: 100%; margin-top: 1px; padding: 5px; background-color: '.$bgcolor.';">'.utf8_encode($row['message']).'</div>';
+	    			echo '<div style="width: 100%; margin-top: 1px; padding: 5px; background-color: '.$bgcolor.';">'.utf8_encode_fix($row['message']).'</div>';
 	    		}
 	    		
 	    		//antwortformular
