@@ -1,0 +1,39 @@
+name: Deploy
+
+on:
+  workflow_call:
+  workflow_dispatch:
+    inputs:
+      sync:
+        description: "File synchronization"
+        required: true
+        default: "delta"
+
+jobs:
+  deploy-master:
+    name: "master branch"
+    if: ${{ github.ref == 'refs/heads/master' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          sparse-checkout: |
+            content
+            cron
+            img
+            js
+            lib
+            ourdetool
+      - run: |
+          rm .gitignore
+      - name: "Deploy"
+        uses: milanmk/actions-file-deployer@1.16
+        with:
+          remote-protocol: "sftp"
+          remote-host: ${{ secrets.SERVER_HOST }}
+          remote-user:  ${{ secrets.DEPLOY_USER }}
+          ssh-private-key: ${{ secrets.DEPLOY_PRIVATE_KEY }}
+          remote-path: ${{ secrets.SDE_PATH }}
