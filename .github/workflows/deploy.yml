@@ -27,8 +27,6 @@ jobs:
             js
             lib
             ourdetool
-      - run: |
-          rm .gitignore
       - name: "Deploy"
         uses: milanmk/actions-file-deployer@1.16
         with:
@@ -36,4 +34,4 @@ jobs:
           remote-host: ${{ secrets.SERVER_HOST }}
           remote-user:  ${{ secrets.DEPLOY_USER }}
           ssh-private-key: ${{ secrets.DEPLOY_PRIVATE_KEY }}
-          remote-path: ${{ secrets.SDE_PATH }}
+          remote-path: ${{ secrets.PATH }}
