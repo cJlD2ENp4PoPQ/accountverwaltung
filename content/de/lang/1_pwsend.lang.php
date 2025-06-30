@@ -1,13 +1,13 @@
 <?php
-$pwsend_lang['passwortanforderung']='BGAM.ES - Passwortanforderung';
+$pwsend_lang['passwortanforderung']='DIE EWIGEN - Passwortanforderung';
 $pwsend_lang['zumlogin']='Zum Login';
 $pwsend_lang['passwortanfordern']='Passwort anfordern';
 $pwsend_lang['loginname']='Loginname';
 $pwsend_lang['emailadresse']='E-Mail-Adresse';
 
-$pwsend_lang['msg_1']='Hallo!
+$pwsend_lang['msg_1']='Hallo,
 
-Sie haben Ihre Zugangsdaten für einen BGAM.ES-Account angefordert
+du hast die Zugangsdaten für deinen DIE EWIGEN-Account angefordert
 und es wurde ein neues Passwort generiert.
 
 Sollten sie sich mit dem neuen Passwort einloggen,

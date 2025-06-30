@@ -14,35 +14,10 @@ echo '
 //content-div
 echo '</div>';
 
-
-
-
-//wenn er sich das erste mal einloggt die e-mail-adresse im newsletter hinterlegen
-//echo $_SESSION['ums_logins'];
-if(isset($_SESSION['ums_logins']) && $_SESSION['ums_logins']<2){
-	$result=mysql_query("SELECT reg_mail, newsletter_accept FROM ls_user WHERE user_id='$_SESSION[ums_user_id]'");
-	$num = mysql_num_rows($result);
-	if ($num>0){//datensatz wurde gefunden
-		$row = mysql_fetch_array($result);
-		if($row['newsletter_accept']==1){
-      $mail=$row["reg_mail"];
-      
-      mysql_query("INSERT INTO de_newsletter SET reg_mail='$mail', sendmail=1, register=NOW();");
-
-      /*
-			$code=md5($mail.'Jf4nMd73');
-			//den account im newsletter eintragen
-			echo '<iframe src="http://die-ewigen.com/newsletter/inm.php?mail='.$mail.'&code='.$code.'&lang="1" framespacing="0"
-				  frameborder="no" scrolling="no" width="0" height="0"></iframe>';
-			*/
-		}
-	}
-}
-
 //sessionverlängerung
-if(isset($_SESSION['ums_logins']) && $_SESSION['ums_user_id']>0 && $_SESSION['ums_mobi']==0){
+if(isset($_SESSION['ums_logins']) && $_SESSION['ums_user_id'] > 0){
 echo "
-<script type=\"text/javascript\" language=\"javascript\">
+<script>
 
 var http_sessreq = false;
 

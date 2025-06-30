@@ -5,48 +5,7 @@ if($_SESSION['ums_user_id']!=1){
 	//die('Wartungsarbeiten. Die Ticks stehen.');
 }
 
-//ggf. creditinfo löschen
-/*
-if($_REQUEST["do"]==1){
-  mysql_query("UPDATE ls_credits SET seen=1 WHERE user_id='$_SESSION[ums_user_id]'");
-}
-*/
-
 //alle Server darstellen
-
-//feststellen auf welchen servern er einen account hat
-//javascriptteil der serverliste generieren, z.b. beschreibungen und tickzeiten
-//zus�tzlich noch die ben�tigen javascript-arrays definieren
-/*
-echo '<script language="javascript">';
-echo 'var stip = new Array();';
-echo 'var atip = new Array();';
-echo 'var btip = new Array();';
-echo 'var servertyp = new Array();';
-echo 'btip[0] = ["'.$server_lang['login'].'","'.$server_lang['msg_1'].'"];';
-echo 'btip[1] = ["'.$server_lang['loginexternerbrowser'].'","'.$server_lang['msg_2'].'"];';
-echo 'btip[2] = ["'.$server_lang['anmeldung'].'","'.$server_lang['msg_3'].'"];';
-echo 'btip[3] = ["'.$server_lang['urlaubsmodusbeenden'].'","'.$server_lang['msg_4'].'"];';
-echo 'btip[4] = ["'.$server_lang['credittransfer'].'","'.$server_lang['msg_5'].'"];';
-echo 'btip[5] = ["'.$server_lang['spielzeiterwerben'].'","'.$server_lang['msg_6'].'"];';
-
-for ($i=0;$i<=$sindex;$i++)
-{
-  if($serverdata[$i][2]!='')
-  $sstr=$server_lang['wtick'].': '.$serverdata[$i][2].'<br>'.
-        $server_lang['ktick'].': '.$serverdata[$i][3];
-  else $sstr='';
-  $stip[$i] = '<b>'.$serverdata[$i][0].' - '.$serverdata[$i][1].'</b><br>'.$sstr.'"];';
-}
-//servertypen (billing) in nen array packen
-for ($i=0;$i<=$sindex;$i++)
-{
-  echo 'servertyp['.$i.'] = '.$serverdata[$i][7].';';
-}
-
-echo "</script>";
-*/
-
 for ($i=0;$i<=$sindex;$i++){
   if($serverdata[$i][2]!='')
   $sstr=$server_lang['wtick'].': '.$serverdata[$i][2].'<br>'.
@@ -54,31 +13,6 @@ for ($i=0;$i<=$sindex;$i++){
   else $sstr='';
   $stip[$i] = '<b>'.$serverdata[$i][0].' - '.$serverdata[$i][1].'</b><br>'.$sstr.'"];';
 }
-
-//auslesen ob der externe browserlink angezeigt werden soll und ob man noch alte tickets hat
-$result = mysql_query("SELECT showeblink, tickets FROM ls_user WHERE user_id='".$_SESSION['ums_user_id']."';");
-$row = mysql_fetch_array($result);
-$showeblink=$row["showeblink"];
-$tickets=0;//$row["tickets"];
-
-
-//überprüfen ob man evtl. credits als werbebonus bekommen hat
-/*
-$werbeboni='';
-$result = mysql_query("SELECT * FROM ls_credits WHERE user_id='$_SESSION[ums_user_id]' AND seen=0");
-while($row = mysql_fetch_array($result))
-{
-  if($row["credits"]>0)
-  {
-	if($werbeboni!='')$werbeboni.=', ';
-    $werbeboni.=$row["credits"];
-  }
-}
-if($werbeboni!='')
-{
-  echo $server_lang['freundschaftsboni'].': '.$werbeboni.' <a href="index.php?command=server&do=1">'.$server_lang['freundschaftsboniinfoloeschen'].'</a>';
-}
-*/
 
 $containerold=-1;
 
@@ -88,11 +22,13 @@ echo '<div style="width: 100%; position: relative; color: #000000;">';
 //$stipids='';
 for ($i=0;$i<=$sindex;$i++){
 	//schauen ob sich der spieltyp ändert
+	$hinweis='';
     if($containerold!=$serverdata[$i]['container']){
 		//spielnamen ausgeben
 		echo '<div style="margin-bottom: 15px; margin-top: 20px; width: 100%; float: left; font-size: 24px; color: '.$serverdata[$i]['containercolor'].'"><b>'.$gamename[$serverdata[$i]['container']].'</b></div>';
 		
 		//Hinweistext bzgl. Testserver
+		/*
 		if($gamename[$serverdata[$i]['container']]=='DIE EWIGEN'){
 			$hinweis='
 			<div style="padding: 5px; border: 1px solid #39F; margin-bottom: 5px; color: #FF0000; float: left; width: 98.5%;">
@@ -102,9 +38,8 @@ for ($i=0;$i<=$sindex;$i++){
 				</span>
 			</div>';
 		}
+		*/
 
-	}else{
-		$hinweis='';
 	}
     
 	echo $hinweis;
@@ -120,17 +55,7 @@ for ($i=0;$i<=$sindex;$i++){
     if($stipids!='')$stipids.=',';
 	$stipids.="#stip$i";
 	*/
-    
-	//credittransfer-link
-	if($serverdata[$i][7]==1 && $credits>0){
-		echo '
-		<div class="game_credit_'.($serverdata[$i]['containerbg']).'" title="'.$server_lang['msg_5'].'" rel="tooltip">
-			<a href="index.php?command=credittransfer&server='.$i.'"><img src="img/credits.gif"></a>
-		</div>';
-	}
-	
-	
-    
+   
     //empfehlung für neue spieler
     if($serverdata[$i][12]==1){
 		echo '<span style="left: 6px; top: 28px; position: absolute; width: 148px; font-size: 12px; text-align: center;">'.$server_lang['empfehlung'].'</span>';
@@ -149,102 +74,90 @@ for ($i=0;$i<=$sindex;$i++){
 	switch($serverdata[$i][8]){
 
 		case 1: //Die Ewigen
-			
-			if(!empty($serverdata[$i]['database'])){
-				@$db_temp = mysqli_connect($GLOBALS['env_db_gameserver_1_host'], $GLOBALS['env_db_gameserver_1_user'], $GLOBALS['env_db_gameserver_1_password']);
-				if(!$db_temp){
-					echo '<br><br><br>DB-Access-Error';
-				}else{
+			if(!empty($serverdata[$i]['databaseKey'])){
 
-					try {
-						mysqli_select_db ($db_temp, $serverdata[$i]['database']);
+				$databaseKey = $serverdata[$i]['databaseKey'] ?? '';
+				try {
+					$dbTemp = new mysqli($GLOBALS['env_databaseKey'][$databaseKey]['host'], $GLOBALS['env_databaseKey'][$databaseKey]['user'], $GLOBALS['env_databaseKey'][$databaseKey]['password'], $GLOBALS['env_databaseKey'][$databaseKey]['database']);
+					
+					$dbTemp->set_charset("utf8mb4");
 
-						$db_daten=mysqli_query($db_temp, "SELECT de_login.user_id, de_login.supporter, de_login.last_login, de_login.delmode, de_login.status AS astatus, de_user_data.spielername, de_user_data.tick, de_user_data.score, de_login.status AS lstatus, de_login.last_login, de_user_data.sector, de_user_data.system, de_user_data.allytag, de_user_data.status, de_user_data.credits, de_user_data.patime, de_user_data.efta_user_id, de_user_data.sou_user_id FROM de_login left join de_user_data on(de_login.user_id = de_user_data.user_id) WHERE de_login.owner_id='".$_SESSION['ums_user_id']."'");
+					$db_daten=mysqli_query($dbTemp, "SELECT de_login.user_id, de_login.supporter, de_login.last_login, de_login.delmode, de_login.status AS astatus, de_user_data.spielername, de_user_data.tick, de_user_data.score, de_login.status AS lstatus, de_login.last_login, de_user_data.sector, de_user_data.system, de_user_data.allytag, de_user_data.status, de_user_data.credits, de_user_data.patime, de_user_data.efta_user_id, de_user_data.sou_user_id FROM de_login left join de_user_data on(de_login.user_id = de_user_data.user_id) WHERE de_login.owner_id='".intval($_SESSION['ums_user_id'])."'");
 
-						if($db_temp->errno==0){
+					if($dbTemp->errno==0){
 
-							$num = mysqli_num_rows($db_daten);
-							if($num==1){
-								$row = mysqli_fetch_array($db_daten);
-								$user_id=$row["user_id"];
-								$accstatus=$row["astatus"];
-								$delmode=$row["delmode"];
-								$efta_user_id=$row['efta_user_id'];
-								$sou_user_id=$row['sou_user_id'];
-								$last_login=$row['last_login'];
-								$last_login=strtotime($last_login);
-								$last_login=date("d.m.Y - H:i", $last_login);
+						$num = mysqli_num_rows($db_daten);
+						if($num==1){
+							$row = mysqli_fetch_array($db_daten);
+							$user_id=$row["user_id"];
+							$accstatus=$row["astatus"];
+							$delmode=$row["delmode"];
+							$efta_user_id=$row['efta_user_id'];
+							$sou_user_id=$row['sou_user_id'];
+							$last_login=$row['last_login'];
+							$last_login=strtotime($last_login);
+							$last_login=date("d.m.Y - H:i", $last_login);
 
-								//$spielerinfos ='Server-Spieler-ID: ';
+							//$spielerinfos ='Server-Spieler-ID: ';
 
-								$spielerinfos.='<b>Accountdaten</b>';
+							$spielerinfos.='<b>Accountdaten</b>';
 
-								//Spielername
-								$spielerinfos.='<br>Spielername: '.$row['spielername'];
+							//Spielername
+							$spielerinfos.='<br>Spielername: '.$row['spielername'];
 
-								//Punkte
-								$spielerinfos.='<br>Punkte: '.number_format($row["score"], 0,"",".");
+							//Punkte
+							$spielerinfos.='<br>Punkte: '.number_format($row["score"], 0,"",".");
 
-								//Accountalter in WT
-								$spielerinfos.='<br>Accountalter (WT): '.number_format($row["tick"], 0,"",".");
+							//Accountalter in WT
+							$spielerinfos.='<br>Accountalter (WT): '.number_format($row["tick"], 0,"",".");
 
-								//Allianz
-								if($row["status"]==1 AND $row["allytag"]!=''){
-									$allytag=$row["allytag"];
-								}
-									else $allytag='-';
-								$spielerinfos.='<br>Allianz: '.$allytag;
+							//Allianz
+							if($row["status"]==1 AND $row["allytag"]!=''){
+								$allytag=$row["allytag"];
+							}
+								else $allytag='-';
+							$spielerinfos.='<br>Allianz: '.$allytag;
 
-								//Credits
-								$spielerinfos.='<br>Credits: '.number_format($row["credits"], 0,"",".");
+							//Credits
+							$spielerinfos.='<br>Credits: '.number_format($row["credits"], 0,"",".");
 
-								//Letzte Aktion
-								if($accstatus!=3){
-									$spielerinfos.='<br>Letzte Aktion: '.$last_login;
-									$spielerstatus='aktiv';
-								}else{
-									$spielerstatus='Sondermodus';
-								}
-
-								//Accountstatus
-								if($accstatus==3 AND $delmode==0){
-									$spielerinfos.='<br>Der Account befindet sich bis zum folgenden Zeitpunkt im Urlaubsmodus und wird danach vom Wirtschaftstick wieder aktiviert: '.$last_login;
-								}
-								if($accstatus==3 AND $delmode==1){
-									$spielerinfos.='<br>Der Account befindet sich bis zum folgenden Zeitpunkt im Loeschmodus und wird danach vom Wirtschaftstick entfernt, wobei ein Loginversuch den Loeschmodus in einen Urlaubsmodus umwandelt: '.$last_login;
-								}
-								if($accstatus==2){
-									$spielerinfos.='<br>Der Account wurde gesperrt, erstelle ein Ticket falls Du fragen haben solltest.';
-								}
-
-								//Login-Link
-								if($showeblink==1){
-									$login_link='<a href="serverlogin.php?server='.$i.'&eb=1"><b>Spielen</b></a>';
-								}else{
-									$login_link='<a href="serverlogin.php?server='.$i.'" target="_blank"><b>Spielen</b></a>';
-								}
-
+							//Letzte Aktion
+							if($accstatus!=3){
+								$spielerinfos.='<br>Letzte Aktion: '.$last_login;
+								$spielerstatus='aktiv';
 							}else{
-								$spielerinfos='Es wurde noch kein Account angelegt.';
+								$spielerstatus='Sondermodus';
 							}
 
+							//Accountstatus
+							if($accstatus==3 AND $delmode==0){
+								$spielerinfos.='<br>Der Account befindet sich bis zum folgenden Zeitpunkt im Urlaubsmodus und wird danach vom Wirtschaftstick wieder aktiviert: '.$last_login;
+							}
+							if($accstatus==3 AND $delmode==1){
+								$spielerinfos.='<br>Der Account befindet sich bis zum folgenden Zeitpunkt im Loeschmodus und wird danach vom Wirtschaftstick entfernt, wobei ein Loginversuch den Loeschmodus in einen Urlaubsmodus umwandelt: '.$last_login;
+							}
+							if($accstatus==2){
+								$spielerinfos.='<br>Der Account wurde gesperrt, erstelle ein Ticket falls Du fragen haben solltest.';
+							}
+
+							//Login-Link
+							$login_link='<a href="serverlogin.php?server='.$i.'" target="_blank"><b>Spielen</b></a>';
+
 						}else{
-							echo '<br><br><br>DB-Access-Error';
+							$spielerinfos='Es wurde noch kein Account angelegt.';
 						}
 
-					} catch (Exception $e) {
-						echo '<br><br><br>DB-Access-Error';
 					}					
 
-				}
-
-			}else{
-				//es wurde keine Datenbank definiert
-				$spielerinfos='Error: no database';
+				} catch (mysqli_sql_exception $e) {
+					// Benutzerfreundliche Fehlermeldung
+					echo '<br><br><br>DB-Access-Error';
+				}				
 			}
 
 		break;
 
+		/*
 		case 4: //EA/Ablyon
 			if(!empty($serverdata[$i]['database'])){
 				@$db_temp = mysqli_connect($GLOBALS['env_db_gameserver_1_host'],$GLOBALS['env_db_gameserver_1_user'],$GLOBALS['env_db_gameserver_1_password']);
@@ -371,7 +284,7 @@ for ($i=0;$i<=$sindex;$i++){
 			}			
 
 		break;
-
+			*/
 		default;
 			$spielerinfos='Error: SZ02';
 		break;

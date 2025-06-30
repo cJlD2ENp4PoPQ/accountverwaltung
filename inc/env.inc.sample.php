@@ -50,9 +50,16 @@ $GLOBALS['env_mail_password']='';
 //RPC Authcode
 $GLOBALS['env_rpc_authcode']='';
 
-//GAMESERVER 1
-$GLOBALS['env_db_gameserver_1_host']='';
-$GLOBALS['env_db_gameserver_1_user']='';
-$GLOBALS['env_db_gameserver_1_password']='';
+//Datenbankverbindung für den Spielserver, erreichbar per databaseKey
+$GLOBALS['env_databaseKey']['xde']['host']='';
+$GLOBALS['env_databaseKey']['xde']['database']='';
+$GLOBALS['env_databaseKey']['xde']['user']='';
+$GLOBALS['env_databaseKey']['xde']['password']='';
+
+$GLOBALS['env_databaseKey']['sde']['host']='';
+$GLOBALS['env_databaseKey']['sde']['database']='';
+$GLOBALS['env_databaseKey']['sde']['user']='';
+$GLOBALS['env_databaseKey']['sde']['password']='';
+
 
 ?>
