@@ -10,18 +10,19 @@ function SecureValue($value)
 
 function doPost($uri,$postdata,$host){
 
-	//error_reporting(E_ALL);
-  $ch = curl_init("http://$host/$uri?$postdata");
-  //curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-  //curl_setopt($ch, CURLOPT_POSTREDIR, 3);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  $response=curl_exec($ch);
+	error_reporting(E_ALL);
+    //echo "https://$host/$uri?$postdata";
+    $ch = curl_init("https://$host/$uri?$postdata");
+    //curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+    //curl_setopt($ch, CURLOPT_POSTREDIR, 3);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    $response=curl_exec($ch);
   
-  //echo curl_error($ch);
+    //echo curl_error($ch);
 
-	return $response;
+    return $response;
 }	
 
 function utf8_encode_fix($string)

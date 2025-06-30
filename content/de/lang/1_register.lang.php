@@ -3,7 +3,7 @@ $newreg_lang['regmailbody']='Hallo {SPIELER}!
 
 Dein Passwort lautet: {PASS}
 
-Solltest Du dich nicht bei Die Ewigen/einem BGAM.ES-Spiel angemeldet haben, so ignoriere diese E-Mail einfach, vermutlich hat jemand versehentlich Deine E-Mail-Adresse eingegeben.
+Solltest Du dich nicht bei Die Ewigen angemeldet haben, so ignoriere diese E-Mail einfach, vermutlich hat jemand versehentlich Deine E-Mail-Adresse eingegeben.
 
 Impressum:
 Tino Tauchmann
@@ -111,7 +111,7 @@ $newreg_lang['jahr']='Jahr';
 $newreg_lang['maennlich']='m&auml;nnlich';
 $newreg_lang['monat']='Monat';
 $newreg_lang['neuenaccountanlegen']='Neuen Account anlegen';
-$newreg_lang['regmailbetreff']='Deine Anmeldung bei BGAM.ES';
+$newreg_lang['regmailbetreff']='Deine Anmeldung bei DIE EWIGEN';
 
 $newreg_lang['servervoll']='Das Userlimit f&uuml;r den Server wurde erreicht. Es werden jedoch inaktive User gel&ouml;scht und so k&ouml;nnen wieder freie Pl&auml;tze entstehen. Versuchen Sie es bitte daher sp&auml;ter nocheinmal.';
 $newreg_lang['spaet1']='Da die aktuelle Runde bereits seit ';

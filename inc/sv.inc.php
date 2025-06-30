@@ -1,12 +1,12 @@
 <?php
-$sv_debugmode=1;
+$GLOBALS['sv_debugmode']=1;
 
-//id für das pcs
+//id fÃ¼r das pcs
 $sv_pcs_id=99;
 
-//id für das logging
+//id fÃ¼r das logging
 $sv_servid=99;
 
-//servertag für die accountverwaltung
+//servertag fÃ¼r die accountverwaltung
 $sv_server_tag= 'AID';
 ?>

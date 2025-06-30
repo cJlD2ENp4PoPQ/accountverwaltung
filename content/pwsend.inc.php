@@ -54,50 +54,28 @@ if( (isset($_POST["nic"]) && $_POST["nic"]) || (isset($_POST["email"]) && $_POST
 		require 'lib/phpmailer/class.phpmailer.php';
 		require 'lib/phpmailer/class.smtp.php';
 
-		//Create a new PHPMailer instance
 		$mail = new PHPMailer;
-		//Tell PHPMailer to use SMTP
+
 		$mail->isSMTP();
-
-		$mail->smtpConnect([
-			'ssl' => [
-				'verify_peer' => false,
-				'verify_peer_name' => false,
-				'allow_self_signed' => true
-			]
-		]);
-
-		//Enable SMTP debugging
-		// 0 = off (for production use)
-		// 1 = client messages
-		// 2 = client and server messages
-		$mail->SMTPDebug = 0;
+		$mail->Host = $GLOBALS['env_mail_server'];
+		$mail->SMTPAuth = true;
+		$mail->Username = $GLOBALS['env_mail_user'];
+		$mail->Password = $GLOBALS['env_mail_password'];
+		$mail->SMTPSecure = 'tls';
+		$mail->Port = 587;
 
 		/*
 		if($row['reg_mail']=='tauchmann@gmx.de'){
 			error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
-			$mail->SMTPDebug = 4;
+			$mail->SMTPDebug = 2;
 		}
 		*/
-		
-		//Ask for HTML-friendly debug output
-		$mail->Debugoutput = 'html';
-		//Set the hostname of the mail server
-		$mail->Host = $GLOBALS['env_mail_server'];
-		//Set the SMTP port number - likely to be 25, 465 or 587
-		$mail->Port = 587;
-		//Whether to use SMTP authentication
-		$mail->SMTPAuth = true;
-		//Username to use for SMTP authentication
-		$mail->Username = $GLOBALS['env_mail_user'];
-		//Password to use for SMTP authentication
-		$mail->Password = $GLOBALS['env_mail_password'];
-		//Set who the message is to be sent from
+
 		$mail->setFrom($GLOBALS['env_mail_noreply'], 'Die Ewigen');
 		//Set an alternative reply-to address
 		$mail->addReplyTo($GLOBALS['env_mail_noreply'], 'Die Ewigen');
 		//Set who the message is to be sent to
-		$mail->addAddress($row["reg_mail"], $row['vorname'].' '.$row['nachname']);
+		$mail->addAddress($row["reg_mail"]);
 		//Set the subject line
 		$mail->Subject = $pwsend_lang['passwortanforderung'];
 		//Read an HTML message body from an external file, convert referenced images to embedded,

@@ -15,7 +15,7 @@ $serverdata[$sindex]['containercolor']='#3399FF';
 $serverdata[$sindex][2]='10';//wt
 $serverdata[$sindex][3]='60';//kt
 $serverdata[$sindex][4]='beschreibungxde';//beschreibung
-$serverdata[$sindex][5]='xde.bgam.es';//host
+$serverdata[$sindex][5]='xde.die-ewigen.com';//host
 $serverdata[$sindex][6]='/';//url
 $serverdata[$sindex][7]=1;//paytype, 1=kostenlos
 $serverdata[$sindex][8]=1;//gametyp: 1=de, 2=se
@@ -23,7 +23,7 @@ $serverdata[$sindex][9]=1;//sprache: 1=de, 2=en
 $serverdata[$sindex][10]=array(0,1,2); //cooperation bei der der server aktiv ist
 $serverdata[$sindex][11]=array(9999999); //bedingungen für den server: 1. feld mindestplatz in der globalen rangliste
 $serverdata[$sindex][12]=0; //für neue spieler 0=nein, 1=ja
-$serverdata[$sindex]['database']='de_server_xde';
+$serverdata[$sindex]['databaseKey']='xde';
 $sindex++;
 $serverdata[$sindex][0]='SDE';//servertag
 $serverdata[$sindex][1]='Andromeda';//servname
@@ -33,7 +33,7 @@ $serverdata[$sindex]['containercolor']='#3399FF';
 $serverdata[$sindex][2]='3';//wt
 $serverdata[$sindex][3]='12';//kt
 $serverdata[$sindex][4]='beschreibungsde';//beschreibung
-$serverdata[$sindex][5]='sde.bgam.es';//host
+$serverdata[$sindex][5]='sde.die-ewigen.com';//host
 $serverdata[$sindex][6]='/';//url
 $serverdata[$sindex][7]=1;//paytype, 1=kostenlos
 $serverdata[$sindex][8]=1;//gametyp: 1=de, 2=se
@@ -41,7 +41,32 @@ $serverdata[$sindex][9]=1;//sprache: 1=de, 2=en
 $serverdata[$sindex][10]=array(0,1,2); //cooperation bei der der server aktiv ist
 $serverdata[$sindex][11]=array(9999999); //bedingungen f�r den server: 1. feld mindestplatz in der globalen rangliste
 $serverdata[$sindex][12]=1; //f�r neue spieler 0=nein, 1=ja
-$serverdata[$sindex]['database']='de_server_sde';
+$serverdata[$sindex]['databaseKey']='sde';
+
+//den testaccount nur lokal zulassen
+if($GLOBALS['sv_debugmode']==1){
+	//de lokal
+	$sindex++;
+	$serverdata[$sindex][0]='local';//servertag
+	$serverdata[$sindex][1]='DE-Testserver';//servname
+	$serverdata[$sindex]['container']=0;//0=de, 1=se, 2=and
+	$serverdata[$sindex]['containerbg']=0;
+	$serverdata[$sindex]['containercolor']='#3399FF';
+	$serverdata[$sindex][2]='3';//wt
+	$serverdata[$sindex][3]='12';//kt
+	$serverdata[$sindex][4]='Beschreibung';//beschreibung
+	$serverdata[$sindex][5]='de.test';//host
+	$serverdata[$sindex][6]='/';//url
+	$serverdata[$sindex][7]=0;//paytype, 0=kostenlos, aber kein credittransfer, 1=kostenlos mit credittransfer, 2=bezahlserver ohne credittransfer
+	$serverdata[$sindex][8]=1;//gametyp: 1=de, 2=se
+	$serverdata[$sindex][9]=1;//sprache: 1=de, 2=en
+	$serverdata[$sindex][10]=array(0,1); //cooperation bei der der server aktiv ist
+	$serverdata[$sindex][11]=array(9999999, 0); //bedingungen f�r den server: 1. feld mindestplatz in der globalen rangliste, 2. feld: betatester
+	$serverdata[$sindex][12]=0; //f�r neue spieler 0=nein, 1=ja
+	$serverdata[$sindex]['databaseKey']='de_local';
+}
+
+/*
 $sindex++;
 $serverdata[$sindex][0]='EDE';//servertag
 $serverdata[$sindex][1]='Die Ewige Sterneninsel';//servname
@@ -114,7 +139,7 @@ $serverdata[$sindex][10]=array(0,1,2); //cooperation bei der der server aktiv is
 $serverdata[$sindex][11]=array(9999999); //bedingungen f�r den server: 1. feld mindestplatz in der globalen rangliste
 $serverdata[$sindex][12]=0; //f�r neue spieler 0=nein, 1=ja
 $serverdata[$sindex]['database']='de_server_dde';
-
+*/
 /*
 $sindex++;
 $serverdata[$sindex][0]='ENSDE';//servertag
@@ -135,6 +160,7 @@ $serverdata[$sindex][11]=array(9999999); //bedingungen f�r den server: 1. feld
 $serverdata[$sindex][12]=1; //f�r neue spieler 0=nein, 1=ja
 */
 //Die Ewigen EA1
+/*
 $sindex++;
 $serverdata[$sindex][0]='EA1';//servertag
 $serverdata[$sindex][1]='Reiner Erweiterte Arch&auml;ologie (EA)-Server';//servname
@@ -153,6 +179,7 @@ $serverdata[$sindex][10]=array(0,5); //cooperation bei der der server aktiv ist
 $serverdata[$sindex][11]=array(9999999); //bedingungen f�r den server: 1. feld mindestplatz in der globalen rangliste
 $serverdata[$sindex][12]=0; //f�r neue spieler 0=nein, 1=ja
 $serverdata[$sindex]['database']='abl_server_abl1';
+*/
 //Die Ewigen EFTA1
 /*
 $sindex++;
@@ -193,28 +220,6 @@ $serverdata[$sindex][10]=array(0,1,2); //cooperation bei der der server aktiv is
 $serverdata[$sindex][11]=array(9999999, 0); //bedingungen f�r den server: 1. feld mindestplatz in der globalen rangliste, 2. feld: betatester
 $serverdata[$sindex][12]=0; //f�r neue spieler 0=nein, 1=ja
 */
-//den testaccount nur lokal zulassen
-if($sv_debugmode==1){
-	//de lokal
-	$sindex++;
-	$serverdata[$sindex][0]='local';//servertag
-	$serverdata[$sindex][1]='DE-Testserver';//servname
-	$serverdata[$sindex]['container']=0;//0=de, 1=se, 2=and
-	$serverdata[$sindex]['containerbg']=0;
-	$serverdata[$sindex]['containercolor']='#3399FF';
-	$serverdata[$sindex][2]='3';//wt
-	$serverdata[$sindex][3]='12';//kt
-	$serverdata[$sindex][4]='Beschreibung';//beschreibung
-	$serverdata[$sindex][5]='de.test';//host
-	$serverdata[$sindex][6]='/';//url
-	$serverdata[$sindex][7]=0;//paytype, 0=kostenlos, aber kein credittransfer, 1=kostenlos mit credittransfer, 2=bezahlserver ohne credittransfer
-	$serverdata[$sindex][8]=1;//gametyp: 1=de, 2=se
-	$serverdata[$sindex][9]=1;//sprache: 1=de, 2=en
-	$serverdata[$sindex][10]=array(0,1); //cooperation bei der der server aktiv ist
-	$serverdata[$sindex][11]=array(9999999, 0); //bedingungen f�r den server: 1. feld mindestplatz in der globalen rangliste, 2. feld: betatester
-	$serverdata[$sindex][12]=0; //f�r neue spieler 0=nein, 1=ja
-	$serverdata[$sindex]['database']='de_ang';
-}
 /*
 $sindex++;
 $serverdata[$sindex][0]='ADE';//servertag
@@ -257,6 +262,7 @@ if($sv_debugmode==1){
 */
 
 //Andalur 1
+/*
 $sindex++;
 $serverdata[$sindex][0]='AND1';//servertag
 $serverdata[$sindex][1]='Andalur Welt 1';//servname
@@ -275,8 +281,9 @@ $serverdata[$sindex][10]=array(0,6,7); //cooperation bei der der server aktiv is
 $serverdata[$sindex][11]=array(9999999, 0); //bedingungen f�r den server: 1. feld mindestplatz in der globalen rangliste, 2. feld: betatester
 $serverdata[$sindex][12]=0; //f�r neue spieler 0=nein, 1=ja
 $serverdata[$sindex]['database']='and_server_and1';
-
+*/
 //Andalur lokal
+/*
 if($sv_debugmode==1){
 	$sindex++;
 	$serverdata[$sindex][0]='local';//servertag
@@ -296,7 +303,7 @@ if($sv_debugmode==1){
 	$serverdata[$sindex][11]=array(9999999); //bedingungen f�r den server: 1. feld mindestplatz in der globalen rangliste
 	$serverdata[$sindex][12]=0; //f�r neue spieler 0=nein, 1=ja
 }
-
+*/
 /*
 //stolen empires
 $sindex++;

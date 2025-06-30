@@ -99,9 +99,10 @@ $debip='';
 
 //accountdaten vom server
 //if($_SESSION['ums_user_id']==1){
-	//mit Spielserver verbinden
-	$db_temp = mysqli_connect($GLOBALS['env_db_gameserver_1_host'],$GLOBALS['env_db_gameserver_1_user'],$GLOBALS['env_db_gameserver_1_password']);
-	mysqli_select_db ($db_temp, $serverdata[$target]['database']);
+  $databaseKey = $serverdata[$target]['databaseKey'] ?? '';
+
+	$db_temp = mysqli_connect($GLOBALS['env_databaseKey'][$databaseKey]['host'], $GLOBALS['env_databaseKey'][$databaseKey]['user'], $GLOBALS['env_databaseKey'][$databaseKey]['password']);
+  mysqli_select_db ($db_temp, $GLOBALS['env_databaseKey'][$databaseKey]['database']);
 
 	//das aktuelle Passwort setzen und einen Loginkey vergeben
 
