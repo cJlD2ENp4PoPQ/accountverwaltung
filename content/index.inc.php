@@ -125,43 +125,20 @@ if ("serviceWorker" in navigator) {
 <META Name="description" Content="<?php echo $index_lang['description']?>">
 <meta http-equiv="pragma" content="no-cache">
 <meta http-equiv="cache-control" content="max-age=86400"> 
-<script type="text/javascript" src="js/jquery-3.7.1.min.js"></script>
-<script type="text/javascript" src="js/ls.js"></script>
+<script src="js/jquery-3.7.1.min.js"></script>
+<script src="js/ls.js"></script>
 </head>
 <body>
 <?php
 
-
-/*
-echo session_id().'<br>';
-print $_COOKIE['PHPSESSID'];
-
-if($ums_cooperation==2 OR $ums_cooperation==3 OR $ums_cooperation==4 OR $ums_cooperation==5 OR $ums_cooperation==6) //kwick canvas
-{
-?>
-<script type="text/javascript"
-  src="http://api.kwick.de/2.0/canvas.js"></script>
-<script type="text/javascript">
-  var canvasUrl = 'http://www.kwick.de/apps/canvas/576/',
-  scCanvas = new SC.Canvas(canvasUrl);
-</script>
-<?php
-}
-*/
-
 include "header.php";
 
-//men� einbinden
+//menü einbinden
 include "m_main.php";
 
 echo '<div id="content_bg">';
 
 echo '<div id="content">';
-
-//Untermen� ausgeben
-if (!empty($um)) {
-    echo $um.'<br><br>';
-}
 
 //man ist eingeloggt:
 if (isset($_SESSION["ums_user_id"]) && $_SESSION["ums_user_id"] > 0) {
@@ -169,13 +146,22 @@ if (isset($_SESSION["ums_user_id"]) && $_SESSION["ums_user_id"] > 0) {
     mysqli_query($GLOBALS['dbi'], "UPDATE ls_user SET last_login=NOW() WHERE user_id='".intval($_SESSION['ums_user_id'])."';");
 
     if ($_REQUEST["command"] == "logout") {
-        //beim Logout Cookies l�schen
-        setcookie("cuser", '', $time);
-        setcookie("cpass", '', $time);
-
         session_destroy();
         session_start();
-        header("Location: index.php");
+
+        //beim Logout Cookies löschen und zur Startseite weiterleiten
+		echo '
+<script>
+let expires = new Date();
+expires.setTime(expires.getTime() - 1000);
+
+document.cookie = "cuser=; expires=" + expires.toUTCString() + "; path=/";
+document.cookie = "cpass=; expires=" + expires.toUTCString() + "; path=/";
+
+window.location.href = "index.php";
+</script>';
+        exit;
+
     } elseif ($_REQUEST["command"] == "server_direct") {
         include "content/server_direct.inc.php";
     } elseif ($_REQUEST["command"] == "createaccount") {

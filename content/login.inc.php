@@ -31,12 +31,11 @@ if( (isset($_REQUEST["loginname"]) && $_REQUEST["loginname"]!='') || (isset($_RE
 			echo '
 <script>
 let expires = new Date();
-expires.setTime(expires.getTime() + (3600 * 24 * 360 * 1000)); // 30 Tage
+expires.setTime(expires.getTime() + (3600 * 24 * 360 * 1000));
 
 document.cookie = "cuser='.$_REQUEST["loginname"].'; expires=" + expires.toUTCString() + "; path=/";
 document.cookie = "cpass='.md5($row['pass']).'; expires=" + expires.toUTCString() + "; path=/";
-</script>
-';
+</script>';
 		}
 
 		if(password_verify(trim($_REQUEST['pass']), $row['newpass'])){
