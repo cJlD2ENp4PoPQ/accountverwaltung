@@ -2,25 +2,6 @@
 session_start();
 include "inc/header.inc.php";
 
-//die sprache des users feststellen
-if($_SESSION["ums_language"]==''){
-  //auslesen
-  $langarray = explode(",",$_SERVER["HTTP_ACCEPT_LANGUAGE"]);
-  $lang = str_replace("-","_",$langarray[0]);
-
-  //wenn der browser nichts liefert deutsch nehmen
-  if($lang==''){
-    $lang='DE';
-  }
- 
-  //in grossbuchstaben umwandeln
-  $lang = strtoupper($lang);
-  $_SESSION["ums_language"]=1;
-  //schauen ob es eine andere sprache ist
-  if(strstr($lang,'EN')!='')$_SESSION["ums_language"]=2;
-  $ums_language=$_SESSION["ums_language"];
-}
-
 //serverdaten einbinden
 include "inc/serverdata.inc.php";
 include "functions.php";
@@ -31,13 +12,9 @@ $ip=getenv("REMOTE_ADDR");
 $parts=explode(".",$ip);
 $ip=$parts[0].'.x.'.$parts[2].'.'.$parts[3];
 
-
-//schauen ob es der deb-link ist
-$eb=isset($_REQUEST["eb"]) ? intval($_REQUEST["eb"]) : '';
-
-//schauen ob es der bg launcher ist
 $fastlogin=isset($_REQUEST["fastlogin"]) ? intval($_REQUEST["fastlogin"]) : 0;
 $servertag=$_REQUEST["servertag"] ?? '';
+
 
 //zuerst über rpc einen loginschlüssel generieren und auf diesen dann per url weiterleiten
 
@@ -60,24 +37,6 @@ $db_daten=mysql_query("SELECT pass FROM ls_user WHERE user_id='".intval($_SESSIO
 $row = mysql_fetch_array($db_daten);
 $pass='&pass='.$row["pass"];
 $accountverwaltung_passwort=$row["pass"];
-
-//überprüfen ob er die mobile version nutzen möchte
-if($_SESSION['ums_mobi']==1){
-  $mobi='&mobi=1';
-}else{
-  $mobi='';
-}
-
-//wenn der login über den deb-link/bg launcher erfolgt, dann kommt noch ein ip-check dazu
-/*
-if($eb!='' OR $fastlogin!=''){
-	$debip='&ip='.$ip;
-}else{
-	$debip='';
-}
-*/
-
-$debip='';
 
 //accountdaten vom server
 //if($_SESSION['ums_user_id']==1){
@@ -105,9 +64,9 @@ $debip='';
 
   }
 
-$url="https://".$serverdata[$target][5].$serverdata[$target][6].'index.php?loginkey='.$result.$mobi;
+$url="https://".$serverdata[$target][5].$serverdata[$target][6].'index.php?loginkey='.$result;
 
-if($result!='error' AND $eb==''){
+if($result!='error'){
   //echo $result;
   header("Location: ".$url);
   exit;
