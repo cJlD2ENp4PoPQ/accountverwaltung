@@ -149,7 +149,7 @@ if (isset($_REQUEST['newreg'])) {
         $text = $newreg_lang['regmailbody'];
         //Paswort und Login-Name eintragen
         $text = str_replace("{SPIELER}", utf8_decode_fix($spielername), $text);
-        $text = str_replace("{LOGIN}", $loginname, $text);
+        $text = str_replace("{LOGIN}", $email1, $text);
         $text = str_replace("{PASS}", $newpass, $text);
 
         //mail Senden:

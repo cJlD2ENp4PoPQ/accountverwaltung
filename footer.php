@@ -72,7 +72,7 @@ function md()
 md()
 ';
 
-if($ums_user_id>0)
+if($_SESSION['ums_user_id']>0)
 echo "</script>";
 }
 ?>

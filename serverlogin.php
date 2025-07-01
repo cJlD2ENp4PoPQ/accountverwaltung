@@ -1,17 +1,6 @@
 <?php
-include "inc/header.inc.php";
-/*
 session_start();
-
-
-echo session_id().'<br>';
-print $_COOKIE['PHPSESSID'];
-
-print_r($_SESSION);
-echo '<a href="index.php">index.php</a>';
-die();
-
-*/
+include "inc/header.inc.php";
 
 //die sprache des users feststellen
 if($_SESSION["ums_language"]==''){
@@ -67,17 +56,10 @@ if($fastlogin>0){
 }
 
 //das passwort verschlüsselt aus der db auslesen und übertragen
-$db_daten=mysql_query("SELECT pass FROM ls_user WHERE user_id='$ums_user_id'",$db);
+$db_daten=mysql_query("SELECT pass FROM ls_user WHERE user_id='".intval($_SESSION['ums_user_id'])."';",$db);
 $row = mysql_fetch_array($db_daten);
 $pass='&pass='.$row["pass"];
 $accountverwaltung_passwort=$row["pass"];
-
-//schauen ob das grafikpack deaktiviert werden muß
-if($ums_nogp==1){
-	$nogp='&grapa=off';
-}else{
-	$nogp='';
-}
 
 //überprüfen ob er die mobile version nutzen möchte
 if($_SESSION['ums_mobi']==1){
@@ -114,35 +96,16 @@ $debip='';
 	}
   $result=$loginkey;
   
-
-  /*
-  if($_SESSION['ums_user_id']==1){
-    echo 'A: '.$serverdata[$target][8];
-    die();
-  }
-  */
-
   if($serverdata[$target][8]!=5){
     //DE
-    mysqli_query($db_temp, "UPDATE de_login SET loginkey='$loginkey', loginkeytime=UNIX_TIMESTAMP( ), loginkeyip='$ip', pass='$accountverwaltung_passwort' WHERE owner_id = '".$_SESSION['ums_user_id']."';");
+    mysqli_query($db_temp, "UPDATE de_login SET loginkey='$loginkey', loginkeytime=UNIX_TIMESTAMP( ), loginkeyip='$ip', pass='$accountverwaltung_passwort' WHERE owner_id = '".intval($_SESSION['ums_user_id'])."';");
   }else{
     //Andalur
-    mysqli_query($db_temp, "UPDATE db_user_data SET loginkey='$loginkey', loginkeytime=UNIX_TIMESTAMP( ), loginkeyip='$ip' WHERE owner_id = '".$_SESSION['ums_user_id']."';");
+    mysqli_query($db_temp, "UPDATE db_user_data SET loginkey='$loginkey', loginkeytime=UNIX_TIMESTAMP( ), loginkeyip='$ip' WHERE owner_id = '".intval($_SESSION['ums_user_id'])."';");
 
   }
 
-	/*
-}else{
-	$result=doPost($serverdata[$target][6].'rpc.php', 'authcode='.$GLOBALS['env_rpc_authcode'].'&setloginkey=1&id='.$ums_user_id.$debip.$pass, $serverdata[$target][5]);
-}
-*/
-/*
-if($_SESSION['ums_user_id']==1){
-	echo 'test';
-}
-*/
-
-$url="https://".$serverdata[$target][5].$serverdata[$target][6].'index.php?loginkey='.$result.$nogp.$mobi;
+$url="https://".$serverdata[$target][5].$serverdata[$target][6].'index.php?loginkey='.$result.$mobi;
 
 if($result!='error' AND $eb==''){
   //echo $result;

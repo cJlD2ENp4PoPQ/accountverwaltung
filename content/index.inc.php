@@ -1,9 +1,11 @@
 <?php
+session_start();
 $ums_language = 1; // immer deutsch
 include_once "inc/header.inc.php";
 //serverdaten einbinden
-include "inc/serverdata.inc.php";
-include "functions.php";
+include_once "inc/serverdata.inc.php";
+
+include_once "functions.php";
 
 //////////////////////////////////////////////////////////////
 // Werber-ID in die Session packen
