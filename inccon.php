@@ -6,9 +6,10 @@ include_once 'lib/mysql_wrapper.inc.php';
 
 $db = @mysql_connect($GLOBALS['env_db_loginsystem_host'], $GLOBALS['env_db_loginsystem_user'], $GLOBALS['env_db_loginsystem_password'], true) or die("Keine Verbindung zur Datenbank möglich.");
 mysql_select_db($GLOBALS['env_db_loginsystem_database'], $db);
+mysql_set_charset("utf8mb4", $db);
 
 $GLOBALS['dbi'] = mysqli_connect($GLOBALS['env_db_loginsystem_host'], $GLOBALS['env_db_loginsystem_user'], $GLOBALS['env_db_loginsystem_password'], $GLOBALS['env_db_loginsystem_database']) or die("Keine Verbindung zur Datenbank möglich.");
-$GLOBALS['dbi']->set_charset("utf8");
+$GLOBALS['dbi']->set_charset("utf8mb4");
 
 /*
 //TODO: bei Bedarf mit gameserverlogdaten verbinden
@@ -58,7 +59,7 @@ if(isset($_SESSION['ums_user_id']) && $_SESSION['ums_user_id']>0){ //post und ge
 		$scriptname=$_SERVER['PHP_SELF'];
 		if($scriptname[0]=='/')$scriptname = substr($scriptname,1);
 		$scriptname=str_replace('.php','',$scriptname);
-		mysqli_query("INSERT INTO ls_user_log (serverid, userid, time, ip, file, getpost) VALUES('$sv_servid','$ums_user_id',NOW(), '$ip', '$scriptname', '$datenstring')",$db); 
+		mysqli_query("INSERT INTO ls_user_log (serverid, userid, time, ip, file, getpost) VALUES('$sv_servid','".intval($_SESSION['ums_user_id'])."',NOW(), '$ip', '$scriptname', '$datenstring')",$db); 
 		
 		$datenstring='';
   	}

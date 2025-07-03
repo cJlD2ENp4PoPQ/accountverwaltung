@@ -27,9 +27,15 @@ if( (isset($_REQUEST["loginname"]) && $_REQUEST["loginname"]!='') || (isset($_RE
 		if(password_verify(trim($_REQUEST['pass']), $row['pass']) || password_verify(trim($_REQUEST['pass']), $row['newpass'])){
 			$passwordOK=true;
 
-			$time=time()+32000000;
-			setcookie("cuser", $_REQUEST["loginname"] , $time);
-			setcookie("cpass", md5($row['pass']) , $time);
+			//Cookies setzen
+			echo '
+<script>
+let expires = new Date();
+expires.setTime(expires.getTime() + (3600 * 24 * 360 * 1000));
+
+document.cookie = "cuser='.$_REQUEST["loginname"].'; expires=" + expires.toUTCString() + "; path=/";
+document.cookie = "cpass='.md5($row['pass']).'; expires=" + expires.toUTCString() + "; path=/";
+</script>';
 		}
 
 		if(password_verify(trim($_REQUEST['pass']), $row['newpass'])){
@@ -44,7 +50,6 @@ if( (isset($_REQUEST["loginname"]) && $_REQUEST["loginname"]!='') || (isset($_RE
 		$ums_status=$row["acc_status"];
 		if($ums_status==1){ //alles richtig eingegen, spieler einloggen
 			//Spielerdaten auswerten
-			session_regenerate_id(true);
 			$_SESSION['ums_user_id']=$row["user_id"];
 			$_SESSION['ums_spielername']=$row["spielername"];
 			$_SESSION['ums_logins']=$row["logins"];

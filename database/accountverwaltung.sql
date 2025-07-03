@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Erstellungszeit: 30. Jun 2025 um 15:42
+-- Erstellungszeit: 03. Jul 2025 um 18:19
 -- Server-Version: 11.5.2-MariaDB-log
 -- PHP-Version: 8.4.5
 
@@ -27,7 +27,7 @@ CREATE TABLE `de_newsletter` (
   `register` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `de` tinyint(3) UNSIGNED NOT NULL DEFAULT 0,
   `en` tinyint(3) UNSIGNED NOT NULL DEFAULT 0
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_german2_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -38,12 +38,12 @@ CREATE TABLE `de_newsletter` (
 CREATE TABLE `ls_de_kb` (
   `id` int(11) NOT NULL,
   `time` datetime NOT NULL,
-  `server` varchar(5) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
-  `atter` text CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
-  `deffer` text CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
-  `kb` text CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `server` varchar(5) NOT NULL,
+  `atter` mediumtext NOT NULL,
+  `deffer` mediumtext NOT NULL,
+  `kb` mediumtext NOT NULL,
   `kbversion` tinyint(4) NOT NULL DEFAULT 0
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -54,12 +54,12 @@ CREATE TABLE `ls_de_kb` (
 CREATE TABLE `ls_tickets` (
   `id` mediumint(8) UNSIGNED NOT NULL,
   `user_id` mediumint(8) UNSIGNED NOT NULL,
-  `thema` text NOT NULL,
+  `thema` mediumtext NOT NULL,
   `created` bigint(20) UNSIGNED NOT NULL,
   `modified` bigint(20) UNSIGNED NOT NULL,
   `status` tinyint(3) UNSIGNED NOT NULL,
   `supporter` varchar(40) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -71,8 +71,8 @@ CREATE TABLE `ls_tickets_posts` (
   `ticket_id` mediumint(8) UNSIGNED NOT NULL,
   `created` bigint(20) UNSIGNED NOT NULL,
   `poster` varchar(40) NOT NULL,
-  `message` text NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+  `message` mediumtext NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -111,7 +111,7 @@ CREATE TABLE `ls_user` (
   `tupdate` tinyint(3) UNSIGNED NOT NULL DEFAULT 0,
   `tickets` smallint(5) UNSIGNED NOT NULL DEFAULT 0,
   `sonderaktion` tinyint(4) NOT NULL DEFAULT 0,
-  `kommentar` text DEFAULT NULL,
+  `kommentar` mediumtext DEFAULT NULL,
   `showeblink` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
   `newslang` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
   `tlscore` int(10) UNSIGNED NOT NULL DEFAULT 0,
@@ -123,11 +123,11 @@ CREATE TABLE `ls_user` (
   `forum_nick` varchar(20) NOT NULL DEFAULT '',
   `observation_by` varchar(20) NOT NULL DEFAULT '',
   `newsletter_accept` tinyint(4) NOT NULL DEFAULT 0,
-  `fb_id` text DEFAULT NULL,
-  `fb_access_token` text DEFAULT NULL,
-  `google_id` text DEFAULT NULL,
-  `google_access_token` text DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+  `fb_id` mediumtext DEFAULT NULL,
+  `fb_access_token` mediumtext DEFAULT NULL,
+  `google_id` mediumtext DEFAULT NULL,
+  `google_access_token` mediumtext DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -140,7 +140,7 @@ CREATE TABLE `ls_user_count` (
   `datum` date NOT NULL DEFAULT '0000-00-00',
   `anzahl` mediumint(8) UNSIGNED NOT NULL DEFAULT 0,
   `pa_anz` mediumint(8) UNSIGNED NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_german2_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -156,7 +156,7 @@ CREATE TABLE `ls_user_log` (
   `ip` varchar(15) NOT NULL,
   `file` varchar(25) DEFAULT NULL,
   `getpost` varchar(4096) NOT NULL
-) ENGINE=MEMORY DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=MEMORY DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Indizes der exportierten Tabellen

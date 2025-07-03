@@ -241,7 +241,7 @@ $serverdata[$sindex][11]=array(9999999); //bedingungen f�r den server: 1. feld
 
 //Ablyon 2 - Server local
 /*
-if($sv_debugmode==1){
+if($GLOBALS['sv_debugmode']==1){
 	$sindex++;
 	$serverdata[$sindex][0]='local';//servertag
 	$serverdata[$sindex][1]='ADE-Lokal';//servname
@@ -284,7 +284,7 @@ $serverdata[$sindex]['database']='and_server_and1';
 */
 //Andalur lokal
 /*
-if($sv_debugmode==1){
+if($GLOBALS['sv_debugmode']==1){
 	$sindex++;
 	$serverdata[$sindex][0]='local';//servertag
 	$serverdata[$sindex][1]='AND-Testserver';//servname
@@ -341,7 +341,7 @@ $serverdata[$sindex][10]=array(0,3); //cooperation bei der der server aktiv ist
 $serverdata[$sindex][11]=array(9999999); //bedingungen f�r den server: 1. feld mindestplatz in der globalen rangliste
 $serverdata[$sindex][12]=1; //f�r neue spieler 0=nein, 1=ja
 //den testaccount nur lokal zulassen
-if($sv_debugmode==1){
+if($GLOBALS['sv_debugmode']==1){
 //se lokal
 $sindex++;
 $serverdata[$sindex][0]='local';//servertag

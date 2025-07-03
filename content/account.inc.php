@@ -1,7 +1,5 @@
 <?php
 include 'content/de/lang/'.$ums_language.'_account.lang.php';
-
-$ums_user_id = $_SESSION['ums_user_id'];
 $errmsg = '';
 
 echo '<div style="width: 100%;">';
@@ -70,7 +68,7 @@ if (isset($_POST['oldpass']) || isset($_POST['newpass']) || isset($_POST['pass1'
             $minpwchars = 6;
             if (strlen($pass1) > $minpwchars - 1) {
                 $pass1_crypt = password_hash($pass1, PASSWORD_DEFAULT);
-                mysqli_query($GLOBALS['dbi'], "UPDATE ls_user SET pass = '$pass1_crypt', newpass='' WHERE user_id = '$ums_user_id'");
+                mysqli_query($GLOBALS['dbi'], "UPDATE ls_user SET pass = '$pass1_crypt', newpass='' WHERE user_id = '".intval($_SESSION['ums_user_id'])."'");
                 $errmsg .= '<font color="00FF00">'.$account_lang['msg_7'].'</font>';
             } else {
                 $errmsg .= '<font color="FF0000">'.$account_lang['msg_4'].': '.$minpwchars.').</font>';
@@ -96,7 +94,7 @@ echo '<table border="0" cellpadding="3" cellspacing="0">
       </tr>
       <tr>
         <td>'.$account_lang['accountid'].':</td>
-        <td>ID'.$ums_user_id.'</td>
+        <td>ID'.$_SESSION['ums_user_id'].'</td>
       </tr>
       <tr>
         <td>E-Mail:</td>

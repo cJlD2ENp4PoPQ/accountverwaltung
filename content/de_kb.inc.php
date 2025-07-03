@@ -49,15 +49,9 @@ if($server_found==true){
 
 	while($row = mysqli_fetch_array($result)){
 		if($row['kbversion']==0){
-			if($ums_user_id==1){
-				echo '<br>'.$row['time'].'<br>';
-			}
 			echo showkampfberichtV0($row['kb'],$row['atter'],$row['deffer']);
 			echo '<br><hr style="width: 100%;"><br>';
 		}elseif($row['kbversion']==1){
-			if($ums_user_id==1){
-				echo '<br>'.$row['time'].'<br>';
-			}
 			echo showkampfberichtV1($row['kb'],$row['atter'],$row['deffer']);
 			echo '<br><hr style="width: 100%;"><br>';
 		}

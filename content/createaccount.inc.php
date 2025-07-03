@@ -7,7 +7,7 @@ $gametyp=$serverdata[$target][8];
 //überprüfen ob man die voraussetzungen für den server hat
 $hasall=1;
 //platz in der globalen rangliste
-$db_daten=mysql_query("SELECT COUNT(*)AS wert FROM ls_user WHERE tlscore > (SELECT tlscore FROM ls_user WHERE user_id='$ums_user_id')",$db);
+$db_daten=mysql_query("SELECT COUNT(*)AS wert FROM ls_user WHERE tlscore > (SELECT tlscore FROM ls_user WHERE user_id='".$_SESSION['ums_user_id']."')",$db);
 $row = mysql_fetch_array($db_daten);
 $vb_ranglistenplatz=$row["wert"]+1;
 
@@ -15,7 +15,7 @@ if($vb_ranglistenplatz>$serverdata[$target][11][0])$hasall=-1;
 //auf betauser testen
 if($serverdata[$target][11][1]==1)
 {
-  $sql = "SELECT * FROM ls_user WHERE user_id='$ums_user_id';";
+  $sql = "SELECT * FROM ls_user WHERE user_id='".$_SESSION['ums_user_id']."';";
   $result = mysql_query($sql) OR die(mysql_error());
   $row = mysql_fetch_array($result);
   if($row[betatester]==0)$hasall=-2;
@@ -68,8 +68,8 @@ if(isset($_POST['button']) AND $hasall==1){
   //wenn die rasse ok ist, �berpr�fen ob er einen spielernamen eingegeben hat und ob der die erlaubten zeichen enth�lt
 	if($errmsg==''){
 		//da es bei alu keine spielernamenvergabe �ber den hauptaccount gibt, dort als spielername die account-id vom hauptaccount vorbelegen
-		if($gametyp==3)$spielername=$ums_user_id;
-		if($gametyp==4)$spielername=$ums_user_id;
+		if($gametyp==3)$spielername=$_SESSION['ums_user_id'];
+		if($gametyp==4)$spielername=$_SESSION['ums_user_id'];
 		
 		if($spielername!=''){
 			//spielernamen auf g�ltige zeichen �berpr�fen
@@ -77,7 +77,7 @@ if(isset($_POST['button']) AND $hasall==1){
 				$errmsg.='<font color="FF0000">'.$createaccount_lang['msg_2'].': _-=).</font>';
 			}else{
 				//fehlende daten f�r das erstellen des accounts auslesen
-				$sql = "SELECT * FROM ls_user WHERE user_id='$ums_user_id';";
+				$sql = "SELECT * FROM ls_user WHERE user_id='".$_SESSION['ums_user_id']."';";
 				$result = mysql_query($sql) OR die(mysql_error());
 				$row = mysql_fetch_array($result);
 
@@ -99,7 +99,7 @@ if(isset($_POST['button']) AND $hasall==1){
 				//wenn es keine fehler gibt versuchen den account anzulegen
 				//echo 'B:'.$serverdata[$target][6];
 				//echo 'C:'.$serverdata[$target][5];
-				$result=doPost($serverdata[$target][6].'rpc.php', 'authcode='.$GLOBALS['env_rpc_authcode'].'&createaccount=1&id='.$ums_user_id.
+				$result=doPost($serverdata[$target][6].'rpc.php', 'authcode='.$GLOBALS['env_rpc_authcode'].'&createaccount=1&id='.$_SESSION['ums_user_id'].
 					'&spielername='.urlencode($spielername).
 					'&rasse='.urlencode($gewrasse).
 					'&email='.urlencode($email).
@@ -118,7 +118,6 @@ if(isset($_POST['button']) AND $hasall==1){
 					'&werberid='.urlencode($werberid)
 					, $serverdata[$target][5]);
 				//ergebnis auswerten
-				//echo 'A:'.$result;
 				switch($result){
 					case '1':
 						//account ohne fehler angelegt
@@ -152,7 +151,7 @@ if($errmsg!='')echo $errmsg;
 
 //wenn es keinen spielernamen gibt den standardnamen auslesen
 if($spielername==''){
-	$sql = "SELECT spielername FROM ls_user WHERE user_id='$ums_user_id';";
+	$sql = "SELECT spielername FROM ls_user WHERE user_id='".$_SESSION['ums_user_id']."';";
 	$result = mysql_query($sql) OR die(mysql_error());
 	$row = mysql_fetch_array($result);
 	$spielername=$row["spielername"];
