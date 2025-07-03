@@ -1,4 +1,5 @@
 <?php
+session_start();
 include "inc/header.inc.php";
 include "inc/serverdata.inc.php";
 include "functions.php";
@@ -10,5 +11,5 @@ echo $_REQUEST["target"];
 echo ';';
 
 //accountdaten vom server
-echo doPost($serverdata[$_REQUEST["target"]][6].'rpc.php', 'authcode='.$GLOBALS['env_rpc_authcode'].'&getaccountdata=1&id='.$ums_user_id, $serverdata[$_REQUEST["target"]][5]);
+echo doPost($serverdata[$_REQUEST["target"]][6].'rpc.php', 'authcode='.$GLOBALS['env_rpc_authcode'].'&getaccountdata=1&id='.$_SESSION['ums_user_id'], $serverdata[$_REQUEST["target"]][5]);
 ?>

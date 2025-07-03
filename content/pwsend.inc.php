@@ -2,27 +2,14 @@
 include 'content/de/lang/'.$ums_language.'_pwsend.lang.php';
 
 $emailhassend=0;
-if( (isset($_POST["nic"]) && $_POST["nic"]) || (isset($_POST["email"]) && $_POST["email"]) ){ //schauen ob was eingegeben worden ist
+if( (isset($_POST["email"]) && $_POST["email"]) ){ //schauen ob was eingegeben worden ist
 	$email=$_POST["email"];
-	$nic=$_POST["nic"];
-
 	$email = strip_tags($email);
-	//$email = mysql_escape_string($email);
 
-	$nic = strip_tags($nic);
-	//$nic = mysql_escape_string($nic);  
+	$sql="SELECT user_id, loginname, reg_mail, vorname, nachname FROM ls_user WHERE reg_mail = ? LIMIT 1;";
 
-	if($email)
-	{
-	  $where="reg_mail='$email'";
-	}
-	else
-	{
-	  $where="loginname='$nic'";
-	}
-	$sql="SELECT user_id, loginname, reg_mail, vorname, nachname FROM ls_user WHERE $where";
-	$result=mysql_query($sql, $db);
-	$num = mysql_num_rows($result);
+	$result=mysqli_execute_query($GLOBALS['dbi'], $sql, [$email]);
+	$num = mysqli_num_rows($result);
 
 	if($num==1){ //user existiert
 		$row = mysql_fetch_array($result);
@@ -43,14 +30,12 @@ if( (isset($_POST["nic"]) && $_POST["nic"]) || (isset($_POST["email"]) && $_POST
 		$text=utf8_decode($pwsend_lang['msg_1']);
 
 		//Paswort und Login-Name eintragen
-		$text=str_replace("{LOGIN}",$row["loginname"],$text);
+		$text=str_replace("{LOGIN}",$row["reg_mail"],$text);
 		$text=str_replace("{PASS}",$newpass,$text);
 		$text=str_replace("{EMAIL}",$row["reg_mail"],$text);
 		//////////////////////////////////////////////////////
 		//mail Senden:
 		//////////////////////////////////////////////////////
-		//@mail($row["reg_mail"], $pwsend_lang['passwortanforderung'], $text, 'FROM: noreply@die-ewigen.com');
-		//require 'lib/phpmailer/PHPMailerAutoload.php';
 		require 'lib/phpmailer/class.phpmailer.php';
 		require 'lib/phpmailer/class.smtp.php';
 
@@ -64,13 +49,6 @@ if( (isset($_POST["nic"]) && $_POST["nic"]) || (isset($_POST["email"]) && $_POST
 		$mail->SMTPSecure = 'tls';
 		$mail->Port = 587;
 
-		/*
-		if($row['reg_mail']=='tauchmann@gmx.de'){
-			error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
-			$mail->SMTPDebug = 2;
-		}
-		*/
-
 		$mail->setFrom($GLOBALS['env_mail_noreply'], 'Die Ewigen');
 		//Set an alternative reply-to address
 		$mail->addReplyTo($GLOBALS['env_mail_noreply'], 'Die Ewigen');
@@ -78,13 +56,6 @@ if( (isset($_POST["nic"]) && $_POST["nic"]) || (isset($_POST["email"]) && $_POST
 		$mail->addAddress($row["reg_mail"]);
 		//Set the subject line
 		$mail->Subject = $pwsend_lang['passwortanforderung'];
-		//Read an HTML message body from an external file, convert referenced images to embedded,
-		//convert HTML into a basic plain-text alternative body
-		//$mail->msgHTML(file_get_contents('contents.html'), dirname(__FILE__));
-		//Replace the plain text body with one created manually
-		//$mail->AltBody = 'This is a plain-text message body';
-		//Attach an image file
-		//$mail->addAttachment('images/phpmailer_mini.png');
 		$mail->Body = $text;
 
 		//send the message, check for errors
@@ -100,7 +71,7 @@ if( (isset($_POST["nic"]) && $_POST["nic"]) || (isset($_POST["email"]) && $_POST
 	}
 	else echo '<br><font size="2" color="#FF0000">'.$pwsend_lang['msg_3'].'</font>';
 }
-if($emailhassend<1)
+if($emailhassend < 1)
 {
 ?>
 <form action="index.php?command=pwsend" method="POST">
@@ -111,13 +82,6 @@ if($emailhassend<1)
 </tr>
 <tr align="center">
 <td colspan="2"><?=$pwsend_lang['msg_4']?></td>
-</tr>
-<tr align="center">
-<td colspan="2"><?=$pwsend_lang['msg_5']?></td>
-</tr>
-<tr align="center">
-<td width="50%"><?=$pwsend_lang['loginname']?></td>
-<td width="50%"><input type="text" name="nic" value=""></td>
 </tr>
 
 <tr align="center">
@@ -133,4 +97,3 @@ if($emailhassend<1)
 </form>
 <?php
 }
-?>

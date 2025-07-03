@@ -41,7 +41,6 @@ if ((!isset($_SESSION['ums_user_id']) || $_SESSION['ums_user_id'] < 1) && isset(
         if ($ums_status == 1) { //alles richtig, spieler einloggen
             session_regenerate_id(true);
             $_SESSION['ums_user_id'] = $row["user_id"];
-            $ums_user_id = $_SESSION['ums_user_id'];
             $_SESSION['ums_spielername'] = $row["spielername"];
             $_SESSION['ums_logins'] = $row["logins"];
 

@@ -8,7 +8,7 @@ $time = time();
 if ($_REQUEST['page'] == 1) {
 
     if (!isset($_REQUEST['showtid'])) {
-        $db_daten = mysqli_query($GLOBALS['dbi'], "SELECT * FROM ls_tickets WHERE user_id='$ums_user_id' ORDER BY status ASC, modified DESC");
+        $db_daten = mysqli_query($GLOBALS['dbi'], "SELECT * FROM ls_tickets WHERE user_id='".intval($_SESSION['ums_user_id'])."' ORDER BY status ASC, modified DESC");
         $num = mysqli_num_rows($db_daten);
         if ($num > 0) {
             //kopf
@@ -39,12 +39,12 @@ if ($_REQUEST['page'] == 1) {
         }
     } else { //ticket anzeigen mit Eingabemöglichkeit für eine Antwort
         $ticket_id = intval($_REQUEST['showtid']);
-        $db_daten = mysqli_query($GLOBALS['dbi'], "SELECT * FROM ls_tickets WHERE user_id='$ums_user_id' AND id='$ticket_id'");
+        $db_daten = mysqli_query($GLOBALS['dbi'], "SELECT * FROM ls_tickets WHERE user_id='".intval($_SESSION['ums_user_id'])."' AND id='$ticket_id'");
         $num = mysqli_num_rows($db_daten);
         if ($num > 0) {
             $row = mysqli_fetch_array($db_daten);
             //überprüfen ob das ticket dem spieler gehört
-            if ($ums_user_id == $row['user_id']) {
+            if ($_SESSION['ums_user_id'] == $row['user_id']) {
                 //überprüfen ob eine antwort eingefügt werden soll
                 if (isset($_REQUEST['reply']) && $_REQUEST['reply'] == 1) {
                     $messagesql = trim($_REQUEST['nachricht']);
@@ -138,7 +138,7 @@ elseif ($_REQUEST['page'] == 2) {
         $messagesql = str_replace('\r\n', '<br>', $messagesql);
         $messagesql = utf8_decode($messagesql);
 
-        mysqli_query($GLOBALS['dbi'], "INSERT INTO ls_tickets SET user_id='$ums_user_id', thema='$themasql', created='$time', modified='$time', status=0;");
+        mysqli_query($GLOBALS['dbi'], "INSERT INTO ls_tickets SET user_id='".intval($_SESSION['ums_user_id'])."', thema='$themasql', created='$time', modified='$time', status=0;");
         $ticket_id = mysql_insert_id();
         mysqli_query($GLOBALS['dbi'], "INSERT INTO ls_tickets_posts SET ticket_id='$ticket_id', created='$time', poster='$ums_spielername', message='$messagesql';");
         //info per e-mail an die supporter
