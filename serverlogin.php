@@ -5,7 +5,7 @@ include "inc/header.inc.php";
 //serverdaten einbinden
 include "inc/serverdata.inc.php";
 include "functions.php";
-include 'content/de/lang/'.$_SESSION['ums_language'].'_serverlogin.lang.php';
+include 'content/de/lang/'.($_SESSION['ums_language'] ?? 1).'_serverlogin.lang.php';
 
 //ip adresse feststellen
 $ip=getenv("REMOTE_ADDR");
