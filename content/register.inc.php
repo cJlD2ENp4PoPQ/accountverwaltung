@@ -44,20 +44,9 @@ function is_email($email)
 
 $spielername = isset($_REQUEST['spielername']) ? $_REQUEST['spielername'] : '';
 $email1 = isset($_REQUEST['email1']) ? $_REQUEST['email1'] : '';
-$vorname = isset($_REQUEST['vorname']) ? $_REQUEST['vorname'] : '';
-$nachname = isset($_REQUEST['nachname']) ? $_REQUEST['nachname'] : '';
 $agb = isset($_REQUEST['agb']) ? intval($_REQUEST['agb']) : 0;
-$newsletter_accept = isset($_REQUEST['newsletter_accept']) ? intval($_REQUEST['newsletter_accept']) : 0;
 
-
-//Werber-ID
-$werberid = isset($_POST["referer"]) ? intval($_POST["referer"]) : 0;
-if (isset($_POST["referer"]) && !empty($_POST["referer"])) {
-    $_SESSION['werber_id'] = intval($_POST["referer"]);
-}
-if (!isset($_SESSION['werber_id'])) {
-    $_SESSION['werber_id'] = '';
-}
+$country = isset($_REQUEST['country']) ? $_REQUEST['country'] : '';
 
 
 if (isset($_REQUEST['newreg'])) {
@@ -129,53 +118,53 @@ if (isset($_REQUEST['newreg'])) {
         //Passwort verschlüsseln
         $newpass_crypt = password_hash($newpass, PASSWORD_DEFAULT);
 
+
         //daten in der db ablegen
-		$sql = "INSERT INTO ls_user (
-			loginname, reg_mail, pass,
-			register, last_login, acc_status,
-			last_ip, spielername
-		) VALUES (
-			?, ?, ?, 
-			NOW(), NOW(), 1, 
-			?, ?
-		)";
-		mysqli_execute_query($GLOBALS['dbi'], $sql, [$email1, $email1, $newpass_crypt, $ip, $spielername]);
+        if(empty($country)){
+            $sql = "INSERT INTO ls_user (
+                loginname, reg_mail, pass,
+                register, last_login, acc_status,
+                last_ip, spielername
+            ) VALUES (
+                ?, ?, ?, 
+                NOW(), NOW(), 1, 
+                ?, ?
+            )";
+            mysqli_execute_query($GLOBALS['dbi'], $sql, [$email1, $email1, $newpass_crypt, $ip, $spielername]);
 
-        $user_id = mysqli_insert_id($GLOBALS['dbi']);
+            //registrierungs-email versenden
 
-        //registrierungs-email versenden
-        $accountid = $user_id;
-        // Aktivierungs-Link
-        $text = $newreg_lang['regmailbody'];
-        //Paswort und Login-Name eintragen
-        $text = str_replace("{SPIELER}", utf8_decode_fix($spielername), $text);
-        $text = str_replace("{LOGIN}", $email1, $text);
-        $text = str_replace("{PASS}", $newpass, $text);
+            // Aktivierungs-Link
+            $text = $newreg_lang['regmailbody'];
+            //Paswort und Login-Name eintragen
+            $text = str_replace("{SPIELER}", utf8_decode_fix($spielername), $text);
+            $text = str_replace("{LOGIN}", $email1, $text);
+            $text = str_replace("{PASS}", $newpass, $text);
 
-        //mail Senden:
-        //@mail($email1, $newreg_lang[regmailbetreff], $text, 'FROM: noreply@die-ewigen.com');
+            //mail Senden:
 
-        require_once 'lib/phpmailer/class.phpmailer.php';
-        require_once 'lib/phpmailer/class.smtp.php';
+            require_once 'lib/phpmailer/class.phpmailer.php';
+            require_once 'lib/phpmailer/class.smtp.php';
 
-        $mail = new PHPMailer();
+            $mail = new PHPMailer();
 
-        $mail->isSMTP();
-        $mail->Host = $GLOBALS['env_mail_server'];
-        $mail->SMTPAuth = true;
-        $mail->Username = $GLOBALS['env_mail_user'];
-        $mail->Password = $GLOBALS['env_mail_password'];
-        $mail->SMTPSecure = 'tls';
-        $mail->Port = 587;
+            $mail->isSMTP();
+            $mail->Host = $GLOBALS['env_mail_server'];
+            $mail->SMTPAuth = true;
+            $mail->Username = $GLOBALS['env_mail_user'];
+            $mail->Password = $GLOBALS['env_mail_password'];
+            $mail->SMTPSecure = 'tls';
+            $mail->Port = 587;
 
-        $mail->setFrom($GLOBALS['env_mail_noreply'], 'Die Ewigen');
-        $mail->addReplyTo($GLOBALS['env_mail_noreply'], 'Die Ewigen');
-        $mail->addAddress($email1, utf8_decode_fix($vorname.' '.$nachname));
-        $mail->Subject = $newreg_lang['regmailbetreff'];
-        $mail->Body = $text;
+            $mail->setFrom($GLOBALS['env_mail_noreply'], 'Die Ewigen');
+            $mail->addReplyTo($GLOBALS['env_mail_noreply'], 'Die Ewigen');
+            $mail->addAddress($email1, utf8_decode_fix(' '));
+            $mail->Subject = $newreg_lang['regmailbetreff'];
+            $mail->Body = $text;
 
-        //send the message, check for errors
-        $mail->send();
+            //send the message, check for errors
+            $mail->send();
+        }
 
 		echo '
 		<script>
@@ -212,6 +201,14 @@ echo '<div class="mt15"></div>';
 echo '<div>'.$newreg_lang['spielername'].':</div>';
 echo '<div class="mt5"></div>';
 echo '<div><input type="text" name="spielername" size="30" maxlength="20" value="'.$spielername.'"></div>';
+
+//Country - dient als Honeypot, wenn dort Werte eingetragen werden, wird der Account nicht angelegt
+echo '
+<div class="mt15 country">
+    <div>Country:</div>
+    <div class="mt5"></div>
+    <div><input type="text" name="country" size="30" maxlength="20" value="'.$country.'"></div>
+</div>';
 
 
 //AGB/Datenschutz

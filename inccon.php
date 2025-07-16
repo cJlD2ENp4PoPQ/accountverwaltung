@@ -12,7 +12,7 @@ $GLOBALS['dbi'] = mysqli_connect($GLOBALS['env_db_loginsystem_host'], $GLOBALS['
 $GLOBALS['dbi']->set_charset("utf8mb4");
 
 /*
-//TODO: bei Bedarf mit gameserverlogdaten verbinden
+//TODO: bei Bedarf mit gameserverlogdata verbinden
 if(isset($_SESSION['ums_user_id']) && $_SESSION['ums_user_id']>0){ //post und get-variablen mitloggen
 	if(isset($_POST["accountcheck"]) && $_POST["accountcheck"]==0){
 		$datenstring='';  
