@@ -15,8 +15,8 @@ services:
     env_file:
       - .web.env
     extra_hosts:
-      - "database:mariadb"
-      - "database-logging:mariadb-logging"
+      - "database:host-gateway"
+      - "database-logging:host-gateway"
       - "xde-database:host-gateway"
       - "sde-database:host-gateway"
     environment:
