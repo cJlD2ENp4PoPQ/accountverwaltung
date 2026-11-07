@@ -28,7 +28,7 @@ services:
       - mariadb-logging
 
   mariadb:
-    image: mariadb:11.4
+    image: mariadb:lts-noble
     container_name: login_database_server
     restart: unless-stopped
     ports:
@@ -44,7 +44,7 @@ services:
       - mariadb_data:/var/lib/mysql
 
   mariadb-logging:
-    image: mariadb:11.4
+    image: mariadb:lts-noble
     container_name: loggin_database_server
     restart: unless-stopped
     ports:

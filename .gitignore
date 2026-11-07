@@ -3,7 +3,6 @@ html/ourdetool/user/
 html/ourdetool/logs/
 html/ourdetool/.ht_csrf_secret
 loginsystem.code-workspace
-html/inc/env.inc.php
 .web.env
 .db.env
 .log.env
