@@ -1,0 +1,3 @@
+*/30 * * * * sh /var/cron/lscron.sh >> /var/log/cron_login.log 2>&1
+
+# Empty line required at the end of file for cron to work properly

@@ -1,10 +1,10 @@
 <?php
 set_time_limit(240);
-include "../inc/sv.inc.php";
-include "../inc/env.inc.php";
-include "../inc/serverdata.inc.php";
-include "../functions.php";
-include "../inccon.php";
+include "/var/www/html/inc/sv.inc.php";
+include "/var/www/html/inc/env.inc.php";
+include "/var/www/html/inc/serverdata.inc.php";
+include "/var/www/html/functions.php";
+include "/var/www/html/inccon.php";
 ?>
 <html>
 <head>
@@ -67,8 +67,8 @@ color: #FFFFFF;background-color: #000000;} a {color: #f8ae56; text-align: center
     	$body.='</td></tr></table></td></tr></table></body></html>';
 		
 		//info per e-mail an die supporter
-		require_once '../lib/phpmailer/class.phpmailer.php';
-		require_once '../lib/phpmailer/class.smtp.php';
+		require_once '/var/www/html/lib/phpmailer/class.phpmailer.php';
+		require_once '/var/www/html/lib/phpmailer/class.smtp.php';
 	
 		$mail = new PHPMailer;
 

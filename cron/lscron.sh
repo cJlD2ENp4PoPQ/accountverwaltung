@@ -1,2 +1,2 @@
-cd /var/www/div_loginsystem/cron/
-php5 lscron.php >> logs/lscron_`date "+%Y_%m%d"`.txt
+cd /var/cron/
+php lscron.php >> /var/log/lscron_`date "+%Y_%m%d"`.txt

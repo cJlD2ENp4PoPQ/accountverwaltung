@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: login_php_app
+    restart: always
+    ports:
+      - "9080:80"
+    volumes:
+      - ../html:/var/www/html
+      - ../cron:/var/cron
+    env_file:
+      - .web.env
+    extra_hosts:
+      - "database:mariadb"
+      - "database-logging:mariadb-logging"
+      - "xde-database:host-gateway"
+      - "sde-database:host-gateway"
+    environment:
+      - APACHE_DOCUMENT_ROOT=/var/www/html
+    networks:
+      - app-network
+    depends_on:
+      - mariadb
+      - mariadb-logging
+
+  mariadb:
+    image: mariadb:11.4
+    container_name: login_database_server
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3308:3306"
+    env_file:
+      - .db.env
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${DB_NAME}
+      MARIADB_USER: ${DB_USER}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+  mariadb-logging:
+    image: mariadb:11.4
+    container_name: loggin_database_server
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3307:3306"
+    env_file:
+      - .log.env
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${DB_NAME}
+      MARIADB_USER: ${DB_USER}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - mariadb_logging_data:/var/lib/mysql
+
+networks:
+  app-network:
+    external: true
+
+volumes:
+  mariadb_data:
+  mariadb_logging_data:
