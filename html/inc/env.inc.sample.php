@@ -3,12 +3,7 @@
 //Defaults sind hier definiert. ENV_*-Variablen aus docker/.web.env
 //(docker-compose.yaml: env_file) überschreiben sie; leerer Wert = Default greift.
 
-if (!function_exists('env_cfg')) {
-	function env_cfg(string $envName, $default) {
-		$value = getenv($envName);
-		return ($value === false || $value === '') ? $default : $value;
-	}
-}
+require_once __DIR__ . '/env_cfg.inc.php';
 
 //Admin-E-Mail-Adresse
 $GLOBALS['env_admin_email']=env_cfg('ENV_ADMIN_EMAIL','');

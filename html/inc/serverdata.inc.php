@@ -1,52 +1,81 @@
 <?php
-//hier werden die spielnamen definiert
-$gamename[0]='DIE EWIGEN';
-$gamename[1]='STOLEN EMPIRES';
-$gamename[2]='ANDALUR';
-$gamename[3]='ABLYON <span style="color: #3399FF;">DE</span>VOLUTION';
+require_once __DIR__ . '/env_cfg.inc.php';
 
-//hier werden alle server f�r das loginsystem definiert
+//hier werden die spielnamen definiert
+$gamename[0]=env_cfg('ENV_GAMENAME_0','DIE EWIGEN');
+$gamename[1]=env_cfg('ENV_GAMENAME_1','STOLEN EMPIRES');
+$gamename[2]=env_cfg('ENV_GAMENAME_2','ANDALUR');
+$gamename[3]=env_cfg('ENV_GAMENAME_3','ABLYON <span style="color: #3399FF;">DE</span>VOLUTION');
+
+//hier werden alle server für das loginsystem definiert.
+//Neuen Server hinzufügen: Defaults-Block in $sv_server_defaults ergänzen.
+//Alle Felder lassen sich über ENV_SERVER_<KEY>_* in docker/.web.env überschreiben (leer = Default greift).
+$sv_server_defaults=[
+	'XDE'=>[
+		'tag'=>'xDE',
+		'name'=>'Pinwheel',
+		'container'=>0,
+		'containerbg'=>0,
+		'containercolor'=>'#3399FF',
+		'wt'=>'10',
+		'kt'=>'60',
+		'description'=>'beschreibungxde',
+		'host'=>'xde.die-ewigen.com',
+		'url'=>'/',
+		'paytype'=>1,
+		'gametyp'=>1,
+		'language'=>1,
+		'cooperation'=>'0,1,2',
+		'conditions'=>'9999999',
+		'newplayers'=>0,
+		'databasekey'=>'xde',
+	],
+	'SDE'=>[
+		'tag'=>'SDE',
+		'name'=>'Andromeda',
+		'container'=>0,
+		'containerbg'=>0,
+		'containercolor'=>'#3399FF',
+		'wt'=>'3',
+		'kt'=>'12',
+		'description'=>'beschreibungsde',
+		'host'=>'sde.die-ewigen.com',
+		'url'=>'/',
+		'paytype'=>1,
+		'gametyp'=>1,
+		'language'=>1,
+		'cooperation'=>'0,1,2',
+		'conditions'=>'9999999',
+		'newplayers'=>1,
+		'databasekey'=>'sde',
+	],
+];
+
 $sindex=0;
-$serverdata[$sindex][0]='xDE';//servertag
-$serverdata[$sindex][1]='Pinwheel';//servname
-$serverdata[$sindex]['container']=0;//0=de, 1=se, 2=and
-$serverdata[$sindex]['containerbg']=0;
-$serverdata[$sindex]['containercolor']='#3399FF';
-$serverdata[$sindex][2]='10';//wt
-$serverdata[$sindex][3]='60';//kt
-$serverdata[$sindex][4]='beschreibungxde';//beschreibung
-$serverdata[$sindex][5]='xde.die-ewigen.com';//host
-$serverdata[$sindex][6]='/';//url
-$serverdata[$sindex][7]=1;//paytype, 1=kostenlos
-$serverdata[$sindex][8]=1;//gametyp: 1=de, 2=se
-$serverdata[$sindex][9]=1;//sprache: 1=de, 2=en
-$serverdata[$sindex][10]=array(0,1,2); //cooperation bei der der server aktiv ist
-$serverdata[$sindex][11]=array(9999999); //bedingungen für den server: 1. feld mindestplatz in der globalen rangliste
-$serverdata[$sindex][12]=0; //für neue spieler 0=nein, 1=ja
-$serverdata[$sindex]['databaseKey']='xde';
-$sindex++;
-$serverdata[$sindex][0]='SDE';//servertag
-$serverdata[$sindex][1]='Andromeda';//servname
-$serverdata[$sindex]['container']=0;//0=de, 1=se, 2=and
-$serverdata[$sindex]['containerbg']=0;
-$serverdata[$sindex]['containercolor']='#3399FF';
-$serverdata[$sindex][2]='3';//wt
-$serverdata[$sindex][3]='12';//kt
-$serverdata[$sindex][4]='beschreibungsde';//beschreibung
-$serverdata[$sindex][5]='sde.die-ewigen.com';//host
-$serverdata[$sindex][6]='/';//url
-$serverdata[$sindex][7]=1;//paytype, 1=kostenlos
-$serverdata[$sindex][8]=1;//gametyp: 1=de, 2=se
-$serverdata[$sindex][9]=1;//sprache: 1=de, 2=en
-$serverdata[$sindex][10]=array(0,1,2); //cooperation bei der der server aktiv ist
-$serverdata[$sindex][11]=array(9999999); //bedingungen f�r den server: 1. feld mindestplatz in der globalen rangliste
-$serverdata[$sindex][12]=1; //f�r neue spieler 0=nein, 1=ja
-$serverdata[$sindex]['databaseKey']='sde';
+foreach($sv_server_defaults as $sv_key=>$sv_def){
+	$serverdata[$sindex][0]=env_cfg('ENV_SERVER_'.$sv_key.'_TAG',$sv_def['tag']);//servertag
+	$serverdata[$sindex][1]=env_cfg('ENV_SERVER_'.$sv_key.'_NAME',$sv_def['name']);//servname
+	$serverdata[$sindex]['container']=(int)env_cfg('ENV_SERVER_'.$sv_key.'_CONTAINER',$sv_def['container']);//0=de, 1=se, 2=and
+	$serverdata[$sindex]['containerbg']=(int)env_cfg('ENV_SERVER_'.$sv_key.'_CONTAINERBG',$sv_def['containerbg']);
+	$serverdata[$sindex]['containercolor']=env_cfg('ENV_SERVER_'.$sv_key.'_CONTAINERCOLOR',$sv_def['containercolor']);
+	$serverdata[$sindex][2]=env_cfg('ENV_SERVER_'.$sv_key.'_WT',$sv_def['wt']);//wt
+	$serverdata[$sindex][3]=env_cfg('ENV_SERVER_'.$sv_key.'_KT',$sv_def['kt']);//kt
+	$serverdata[$sindex][4]=env_cfg('ENV_SERVER_'.$sv_key.'_DESCRIPTION',$sv_def['description']);//beschreibung
+	$serverdata[$sindex][5]=env_cfg('ENV_SERVER_'.$sv_key.'_HOST',$sv_def['host']);//host
+	$serverdata[$sindex][6]=env_cfg('ENV_SERVER_'.$sv_key.'_URL',$sv_def['url']);//url
+	$serverdata[$sindex][7]=(int)env_cfg('ENV_SERVER_'.$sv_key.'_PAYTYPE',$sv_def['paytype']);//paytype, 1=kostenlos
+	$serverdata[$sindex][8]=(int)env_cfg('ENV_SERVER_'.$sv_key.'_GAMETYPE',$sv_def['gametyp']);//gametyp: 1=de, 2=se
+	$serverdata[$sindex][9]=(int)env_cfg('ENV_SERVER_'.$sv_key.'_LANGUAGE',$sv_def['language']);//sprache: 1=de, 2=en
+	$serverdata[$sindex][10]=array_map('intval',explode(',',env_cfg('ENV_SERVER_'.$sv_key.'_COOPERATION',$sv_def['cooperation']))); //cooperation bei der der server aktiv ist
+	$serverdata[$sindex][11]=array_map('intval',explode(',',env_cfg('ENV_SERVER_'.$sv_key.'_CONDITIONS',$sv_def['conditions']))); //bedingungen für den server: 1. feld mindestplatz in der globalen rangliste
+	$serverdata[$sindex][12]=(int)env_cfg('ENV_SERVER_'.$sv_key.'_NEWPLAYERS',$sv_def['newplayers']); //für neue spieler 0=nein, 1=ja
+	$serverdata[$sindex]['databaseKey']=env_cfg('ENV_SERVER_'.$sv_key.'_DATABASEKEY',$sv_def['databasekey']);
+	$sindex++;
+}
 
 //den testaccount nur lokal zulassen
 if($GLOBALS['sv_debugmode']==1){
 	//de lokal
-	$sindex++;
 	$serverdata[$sindex][0]='local';//servertag
 	$serverdata[$sindex][1]='DE-Testserver';//servname
 	$serverdata[$sindex]['container']=0;//0=de, 1=se, 2=and

@@ -14,11 +14,6 @@ services:
       - ../cron:/var/cron
     env_file:
       - .web.env
-    extra_hosts:
-      - "database:host-gateway"
-      - "database-logging:host-gateway"
-      - "xde-database:host-gateway"
-      - "sde-database:host-gateway"
     environment:
       - APACHE_DOCUMENT_ROOT=/var/www/html
     networks:
@@ -31,6 +26,8 @@ services:
     image: mariadb:lts-noble
     container_name: login_database_server
     restart: unless-stopped
+    networks:
+      - app-network
     ports:
       - "127.0.0.1:3308:3306"
     environment:
@@ -45,6 +42,8 @@ services:
     image: mariadb:lts-noble
     container_name: loggin_database_server
     restart: unless-stopped
+    networks:
+      - app-network
     ports:
       - "127.0.0.1:3307:3306"
     environment:
