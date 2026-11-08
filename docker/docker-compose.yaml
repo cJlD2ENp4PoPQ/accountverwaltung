@@ -23,7 +23,7 @@ services:
       - mariadb-logging
 
   mariadb:
-    image: mariadb:lts-noble
+    image: mariadb:13-resolute
     container_name: login_database_server
     restart: unless-stopped
     networks:
@@ -39,7 +39,7 @@ services:
       - mariadb_data:/var/lib/mysql
 
   mariadb-logging:
-    image: mariadb:lts-noble
+    image: mariadb:13-resolute
     container_name: loggin_database_server
     restart: unless-stopped
     networks:
