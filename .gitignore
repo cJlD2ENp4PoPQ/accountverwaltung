@@ -4,5 +4,4 @@ html/ourdetool/logs/
 html/ourdetool/.ht_csrf_secret
 loginsystem.code-workspace
 .web.env
-.db.env
-.log.env
+.env
