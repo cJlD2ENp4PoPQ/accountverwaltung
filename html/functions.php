@@ -57,8 +57,8 @@ function loginPerCookie(){
 function doPost($uri,$postdata,$host){
 
 	error_reporting(E_ALL);
-    //echo "https://$host/$uri?$postdata";
-    $ch = curl_init("https://$host/$uri?$postdata");
+    //echo "$host/$uri?$postdata";
+    $ch = curl_init("$host/$uri?$postdata");
     //curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
     //curl_setopt($ch, CURLOPT_POSTREDIR, 3);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
