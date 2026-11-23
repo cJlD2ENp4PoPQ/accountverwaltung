@@ -93,7 +93,9 @@ if($GLOBALS['sv_debugmode']==1){
 	$serverdata[$sindex][11]=array(9999999, 0); //bedingungen f�r den server: 1. feld mindestplatz in der globalen rangliste, 2. feld: betatester
 	$serverdata[$sindex][12]=0; //f�r neue spieler 0=nein, 1=ja
 	$serverdata[$sindex]['databaseKey']='de_local';
+	$sindex++;
 }
+$sindex--;
 
 /*
 $sindex++;
