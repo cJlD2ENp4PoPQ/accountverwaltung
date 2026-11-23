@@ -1,2 +1,2 @@
 cd /var/cron/
-php lscron.php >> /var/log/lscron_`date "+%Y_%m%d"`.txt
+php lscron.php >> /var/log/de/lscron_`date "+%Y_%m%d"`.txt
