@@ -1,4 +1,4 @@
-*/30 * * * * root . /etc/container.env && sh /var/cron/lscron.sh >> /var/log/cron_login.log 2>&1
+0 * * * * root . /etc/container.env && sh /var/cron/lscron.sh >> /var/log/cron_login.log 2>&1
 0 0 * * 1 root rm -rf /var/log/de >> /var/log/cron_cleanup.log 2>&1
 
 # Empty line required at the end of file for cron to work properly
